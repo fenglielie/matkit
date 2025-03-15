@@ -36,6 +36,29 @@ classdef Logger < handle
 
     methods
         function obj = Logger(varargin)
+            % Logger Constructor.
+            %
+            % Name-Value Pair Arguments:
+            %   - fileName="log.txt" : Log file name. If empty, logs only print to console.
+            %   - logLevel=Logger.INFO : Minimum log level (1=DEBUG, 2=INFO, 3=WARN, 4=ERROR).
+            %   - outputToConsole=true : Whether to print logs to the console.
+            %   - writeMode="overwrite" : "overwrite" (replace file) or "append" (add to file).
+            %   - logFormat="level" : Log format: "none", "level", "timestamp_and_level".
+            %   - useMatlabErrors=true : If true, WARN/ERROR will also call MATLAB's warning/error.
+            %
+            % Example Usage:
+            %   logger = Logger();  % Default logger, prints to console
+            %   logger = Logger(fileName="log.txt");  % Logs to file and console
+            %   logger = Logger(logLevel=Logger.WARN, outputToConsole=false);  % Logs warnings/errors to file only
+            %   logger = Logger(logFormat="timestamp_and_level");  % Includes timestamps in log messages
+            %   logger = Logger(useMatlabErrors=false);  % Disable MATLAB warning/error
+            %
+            % Logging methods: (support format strings via sprintf)
+            %   logger.debug('a=%d', 1);
+            %   logger.info('Info message');
+            %   logger.warn('Warning message');
+            %   logger.error('Error message');
+
             p = inputParser;
             addParameter(p, 'fileName', '', @(x) ischar(x) || isstring(x));
             addParameter(p, 'logLevel', Logger.INFO, @(x) isnumeric(x) && isscalar(x));
