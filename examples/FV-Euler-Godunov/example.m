@@ -5,6 +5,7 @@ close all;
 cd(fileparts(mfilename('fullpath')));
 addpath('../../base/gauss_quadrature')
 addpath('../../base/burgers_sin_exact')
+addpath('../../base/mesh_init')
 addpath('../../utils/common')
 
 alpha = 0.5;
