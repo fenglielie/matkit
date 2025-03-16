@@ -8,11 +8,11 @@ classdef LegendreMatrixGenerator
     methods
         function obj = LegendreMatrixGenerator(n)
             % 构造方法
-            [obj.points, obj.weights] = gausslegendre(n);
+            [obj.points, obj.weights] = gauss_legendre(n);
             obj.n = n;
         end
 
-        function M = Eval(obj,x)
+        function M = eval(obj,x)
             % 计算勒让德正交基函数在所有求值点的值
             % 输入：x - 要求值的点（在[-1,1]范围内的）（列向量）
             % 输出：M - 勒让德正交基函数值的矩阵
@@ -32,7 +32,7 @@ classdef LegendreMatrixGenerator
             end
         end
 
-        function DM = EvalDx(obj,x)
+        function DM = eval_dx(obj,x)
             % 计算勒让德正交基函数的导数在所有求值点的值
             % 输入：x - 要求值的点（在[-1,1]范围内的）（列向量）
             % 输出：DM - 拉勒让德正交基函数导数值的矩阵

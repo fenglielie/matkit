@@ -8,11 +8,11 @@ classdef LobattoMatrixGenerator
     methods
         function obj = LobattoMatrixGenerator(n)
             % 构造方法
-            [obj.points, obj.weights] = gausslobatto(n);
+            [obj.points, obj.weights] = gauss_lobatto(n);
             obj.n = n;
         end
 
-        function M = Eval(obj, x)
+        function M = eval(obj, x)
             % 计算拉格朗日基函数在所有求值点的值
             % 输入：x - 要求值的点（在[-1,1]范围内的）（列向量）
             % 输出：M - 拉格朗日基函数值的矩阵
@@ -40,7 +40,7 @@ classdef LobattoMatrixGenerator
             end
         end
 
-        function DM = EvalDx(obj, x)
+        function DM = eval_dx(obj, x)
             % 计算拉格朗日基函数的导数在所有求值点的值
             % 输入：x - 要求值的点（在[-1,1]范围内的）（列向量）
             % 输出：DM - 拉格朗日基函数导数值的矩阵

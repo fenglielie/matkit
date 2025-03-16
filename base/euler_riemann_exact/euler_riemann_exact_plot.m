@@ -1,5 +1,5 @@
-function [fig, ax] = EulerRiemannExactPlot( ...
-    rho_l, u_l, p_l, rho_r, u_r, p_r, x_l, x_r, t, x_c )
+function [fig, ax] = euler_riemann_exact_plot( ...
+        rho_l, u_l, p_l, rho_r, u_r, p_r, x_l, x_r, t, x_c )
 
     if nargin < 10
         x_c = 0.0;
@@ -8,7 +8,7 @@ function [fig, ax] = EulerRiemannExactPlot( ...
     xlist = linspace(x_l, x_r, 1000);
 
     gamma = 1.4;
-    [rho, u, p, more_info] = EulerRiemannExactSolver( ...
+    [rho, u, p, more_info] = euler_riemann_exact( ...
         rho_l, u_l, p_l, rho_r, u_r, p_r, gamma, xlist, x_c, t);
 
     % Calculate internal energy
@@ -75,6 +75,7 @@ function [fig, ax] = EulerRiemannExactPlot( ...
     hold off;
 
     subtitle(sprintf('Riemann Problem (t = %.4f)', t));
+
 end
 
 function fill_betweenx(tlist, y1, y2, color, alpha, label)

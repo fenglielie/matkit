@@ -1,4 +1,4 @@
-function [x, w] = gausslegendre(n)
+function [x, w] = gauss_legendre(n)
     % Computation of the Nodes and Weights for the Gauss-Legendre Quadrature.
     % Input:
     %   n - Number of nodes (integer).

@@ -1,13 +1,14 @@
 % Exact solution of Burgers' equation with 2pi periodic boundary condition
 % u_t + u*u_x = 0,
 % u0(x) = alpha + beta sin(x) in [-pi, pi]
-function u = BurgersSinExactSolver(x,t,alpha,beta)
+
+function u = burgers_sin_exact(x,t,alpha,beta)
     %  u(x,0) = alpha + beta*sin(x)
-    u = alpha + beta * BurgersSinNewton(x - alpha*t, beta*t);
+    u = alpha + beta * burgers_sin_newton(x - alpha*t, beta*t);
 end
 
 
-function u = BurgersSinNewton(x, t)
+function u = burgers_sin_newton(x, t)
     % u(x,0) = sin(x)
     x = mod(x + pi, 2*pi) - pi; % x in [-pi,pi]
 

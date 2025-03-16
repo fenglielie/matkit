@@ -1,4 +1,4 @@
-function [x, w] = gausslobatto(n)
+function [x, w] = gauss_lobatto(n)
     % Computation of the Nodes and Weights for the Gauss-Lobatto Quadrature.
     % Input:
     %   n - Number of nodes (integer).
