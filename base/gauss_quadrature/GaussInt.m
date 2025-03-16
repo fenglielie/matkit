@@ -32,5 +32,13 @@ classdef GaussInt
 
             result = half_width * sum(weights .* f(nodes_local));
         end
+
+        function result = gauss(nodes, weights, f, xleft, xright)
+            half_width = (xright - xleft) / 2;
+            midpoint = (xleft + xright) / 2;
+            nodes_local = midpoint + half_width * nodes;
+
+            result = half_width * sum(weights .* f(nodes_local));
+        end
     end
 end
