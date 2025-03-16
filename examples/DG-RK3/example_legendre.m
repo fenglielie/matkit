@@ -26,7 +26,7 @@ basis_dx = MatLegendreDx(pk+1);
 t1 = 0.5;
 nxlist = [10,20,40,80,160,320,640];
 n = length(nxlist);
-error = zeros(3,n);
+errors = zeros(3,n);
 
 for w = 1:n
     [x,dx] = mesh_init_1d(xleft,xright,nxlist(w));
@@ -37,10 +37,10 @@ for w = 1:n
 
     u_exact_func = @(s) burgers_sin_exact(s,t1,alpha,beta);
 
-    error(:,w) = dg_errors(uh,u_exact_func, x, dx, pk, gk, basis);
+    errors(:,w) = dg_errors(uh,u_exact_func, x, dx, pk, gk, basis);
 end
 
-show_results(nxlist,error(1,:),error(2,:),error(3,:));
+show_results(nxlist,errors(1,:),errors(2,:),errors(3,:));
 
 %% plot test
 
