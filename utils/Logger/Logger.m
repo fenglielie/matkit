@@ -84,7 +84,7 @@ classdef Logger < handle
                 end
 
                 fprintf(obj.fileID, '<<<Log File Opened>>>\n[Timestamp: %s] [Log Level: %s] [Write Mode: %s] [Console Output: %s]\n', ...
-                    obj.getTimeStamp(), obj.getLevelStr(obj.level), p.Results.writeMode, mat2str(obj.outputToConsole));
+                    obj.get_timestamp(), obj.get_level_str(obj.level), p.Results.writeMode, mat2str(obj.outputToConsole));
                 fprintf('Logger: Open %s (%c)\n', p.Results.fileName, mode);
 
                 obj.fileName = p.Results.fileName;
@@ -99,9 +99,9 @@ classdef Logger < handle
             if level < obj.level
                 return;
             end
-            timeStamp = obj.getTimeStamp();
+            timeStamp = obj.get_timestamp();
             message = sprintf(formatStr, varargin{:});
-            logStr = obj.formatLogMsg(timeStamp, level, message);
+            logStr = obj.format_log_msg(timeStamp, level, message);
 
             if obj.outputToConsole
                 fprintf('%s', logStr);
@@ -124,7 +124,7 @@ classdef Logger < handle
             obj.log(Logger.WARN, formatStr, varargin{:});
 
             if obj.useMatlabErrors
-                logMessage = obj.formatLogMsg(obj.getTimeStamp(), Logger.WARN, sprintf(formatStr, varargin{:}));
+                logMessage = obj.format_log_msg(obj.get_timestamp(), Logger.WARN, sprintf(formatStr, varargin{:}));
                 warning(logMessage);
             end
         end
@@ -133,14 +133,14 @@ classdef Logger < handle
             obj.log(Logger.ERROR, formatStr, varargin{:});
 
             if obj.useMatlabErrors
-                logMessage = obj.formatLogMsg(obj.getTimeStamp(), Logger.ERROR, sprintf(formatStr, varargin{:}));
+                logMessage = obj.format_log_msg(obj.get_timestamp(), Logger.ERROR, sprintf(formatStr, varargin{:}));
                 error(logMessage);
             end
         end
 
         function delete(obj)
             if obj.fileID > 0
-                fprintf(obj.fileID, '[Timestamp: %s]\n<<<Log File Closed>>>\n', obj.getTimeStamp());
+                fprintf(obj.fileID, '[Timestamp: %s]\n<<<Log File Closed>>>\n', obj.get_timestamp());
                 fclose(obj.fileID);
                 fprintf('Logger: Close %s\n', obj.fileName);
             end
@@ -148,24 +148,24 @@ classdef Logger < handle
     end
 
     methods (Access = private)
-        function logStr = formatLogMsg(obj, timeStamp, level, message)
+        function logStr = format_log_msg(obj, timeStamp, level, message)
             switch obj.format
                 case 'none'
                     logStr = sprintf('%s\n', message);
                 case 'level'
-                    logStr = sprintf('[%s] %s\n', obj.getLevelStr(level), message);
+                    logStr = sprintf('[%s] %s\n', obj.get_level_str(level), message);
                 case 'timestamp_and_level'
-                    logStr = sprintf('[%s] [%s] %s\n', timeStamp, obj.getLevelStr(level), message);
+                    logStr = sprintf('[%s] [%s] %s\n', timeStamp, obj.get_level_str(level), message);
                 otherwise
-                    logStr = sprintf('[%s] [%s] %s\n', timeStamp, obj.getLevelStr(level), message);
+                    logStr = sprintf('[%s] [%s] %s\n', timeStamp, obj.get_level_str(level), message);
             end
         end
 
-        function timeStamp = getTimeStamp(~)
+        function timeStamp = get_timestamp(~)
             timeStamp = datestr(now, 'yyyy-mm-dd HH:MM:SS.FFF'); %#ok<TNOW1,DATST>
         end
 
-        function str = getLevelStr(~, level)
+        function str = get_level_str(~, level)
             switch level
                 case Logger.DEBUG, str = 'DEBUG';
                 case Logger.INFO, str = 'INFO';

@@ -1,5 +1,4 @@
 cd(fileparts(mfilename('fullpath')));
-addpath('../new')
 
 logger = Logger();
 
