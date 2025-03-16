@@ -25,7 +25,7 @@ for cnt = 1:numel(limiters)
     t1 = 0.5;
     nxlist = [10,20,40,80,160,320,640];
     n = length(nxlist);
-    error = zeros(3,n);
+    errors = zeros(3,n);
 
     for w = 1:n
         [x,dx] = mesh_init_1d(xleft,xright,nxlist(w));
@@ -37,12 +37,12 @@ for cnt = 1:numel(limiters)
         exact_func = @(s) burgers_sin_exact(s,t1,alpha,beta);
         u_exact = arrayfun(@(xi) GaussInt.gauss5(exact_func, xi - dx/2, xi + dx/2) / dx, x);
 
-        error(1,w) = sum(abs(uh - u_exact)) * dx;
-        error(2,w) = sqrt(sum(abs(uh - u_exact).^2) * dx);
-        error(3,w) = max(abs(uh - u_exact));
+        errors(1,w) = sum(abs(uh - u_exact)) * dx;
+        errors(2,w) = sqrt(sum(abs(uh - u_exact).^2) * dx);
+        errors(3,w) = max(abs(uh - u_exact));
     end
 
-    show_results(nxlist,error(1,:),error(2,:),error(3,:));
+    show_results(nxlist,errors(1,:),errors(2,:),errors(3,:));
 
     %% plot test
 
