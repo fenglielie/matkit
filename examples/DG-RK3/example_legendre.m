@@ -18,6 +18,9 @@ xright = pi;
 pk = 2; % Pk
 gk = 5; % Gauss Points
 
+basis = MatLegendre(pk+1);
+basis_dx = MatLegendreDx(pk+1);
+
 %% order test
 
 t1 = 0.5;
@@ -29,12 +32,12 @@ for w = 1:n
     [x,dx] = mesh_init_1d(xleft,xright,nxlist(w));
 
     init_func = @(s) alpha + beta * sin(s);
-    uh0 = dg_projection(init_func, x, dx, pk, gk, MatLegendre(pk+1));
-    uh = dg_rk3_scheme(uh0, dx, t1, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, MatLegendre(pk+1), MatLegendreDx(pk+1));
+    uh0 = dg_projection(init_func, x, dx, pk, gk, basis);
+    uh = dg_rk3_scheme(uh0, dx, t1, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, basis, basis_dx);
 
     u_exact_func = @(s) burgers_sin_exact(s,t1,alpha,beta);
 
-    error(:,w) = dg_errors(uh,u_exact_func, x, dx, pk, gk, MatLegendre(pk+1));
+    error(:,w) = dg_errors(uh,u_exact_func, x, dx, pk, gk, basis);
 end
 
 show_results(nxlist,error(1,:),error(2,:),error(3,:));
@@ -48,7 +51,7 @@ nx_ref = 320;
 [x_ref,dx_ref] = mesh_init_1d(xleft,xright,nx_ref);
 
 exact_ref_func = @(s) burgers_sin_exact(s,t2,alpha,beta);
-u_exact_ref = dg_projection(exact_ref_func, x_ref, dx_ref, pk, gk, MatLegendre(pk+1));
+u_exact_ref = dg_projection(exact_ref_func, x_ref, dx_ref, pk, gk, basis);
 
 figure;
 hold on
@@ -57,10 +60,10 @@ for w=1:2
     [x,dx] = mesh_init_1d(xleft,xright,nxlist2(w));
 
     init_func = @(s) alpha + beta * sin(s);
-    uh0 = dg_projection(init_func, x, dx, pk, gk, MatLegendre(pk+1));
-    uh = dg_rk3_scheme(uh0, dx, t2, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, MatLegendre(pk+1), MatLegendreDx(pk+1));
+    uh0 = dg_projection(init_func, x, dx, pk, gk, basis);
+    uh = dg_rk3_scheme(uh0, dx, t2, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, basis, basis_dx);
 
-    v = MatLegendre(pk+1).eval(0,pk+1); % column vector
+    v = basis.eval(0,pk+1); % column vector
 
     plot(x_ref, v' * u_exact_ref)
     plot(x, v' * uh)
