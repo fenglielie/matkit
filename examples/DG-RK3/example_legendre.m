@@ -3,12 +3,9 @@ clear;
 close all;
 
 cd(fileparts(mfilename('fullpath')));
-addpath('../../base/gauss_quadrature')
-addpath('../../base/burgers_sin_exact')
-addpath('../../base/weno')
-addpath('../../base/dg')
-addpath('../../base/dg/core')
-addpath('../../utils/common')
+run('../../base/setup.m')
+run('../../utils/setup.m')
+
 
 alpha = 0.5;
 beta = 1;
