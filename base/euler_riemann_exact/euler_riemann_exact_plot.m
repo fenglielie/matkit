@@ -12,10 +12,7 @@ function [fig, ax] = euler_riemann_exact_plot( ...
         rho_l, u_l, p_l, rho_r, u_r, p_r, gamma, xlist, x_c, t);
 
     % Calculate internal energy
-    e = zeros(size(p));
-    for w = 1:length(e)
-        e(w) = p(w) / ((gamma - 1) * rho(w));
-    end
+    e = 1/(gamma-1) * p ./ rho;
 
     primitive = {rho, u, p, e};
     names = {"Density", "Velocity", "Pressure", "Internal Energy"};
