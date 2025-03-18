@@ -1,9 +1,10 @@
-x = linspace(0, 10, 100);  % x data
-y1 = sin(x);  % First curve (sin)
-y2 = cos(x);  % Second curve (cos)
+x1 = linspace(0, 10, 100);  % x data
+x2 = linspace(0, 10, 200);  % x data
+y1 = sin(x1);  % First curve (sin)
+y2 = cos(x2);  % Second curve (cos)
 
 % Plot the curves with automatic styles and show the figure
-easy_plot(x, {y1, y2}, 'Title', 'Sine and Cosine Waves', ...
+easy_plot({x1,x2}, {y1, y2}, 'Title', 'Sine and Cosine Waves', ...
     'XLabel', 'x', 'YLabel', 'y', 'Legend', {'sin(x)', 'cos(x)'});
 
 

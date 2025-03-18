@@ -1,9 +1,9 @@
 function handles = easy_plot(x, varargin)
-    % easy_plot - A simplified plotting function that supports multiple curves,
-    % automatic style assignment, title, labels, legend, and saving functionality.
+    % easy_plot - A flexible plotting function that supports multiple curves,
+    % allowing each curve to have a different x-axis.
     %
     % Inputs:
-    %   x           - x data, can be a vector.
+    %   x           - x data, can be a vector or a cell array of vectors.
     %   y           - y data, can be a vector or a cell array of vectors (multiple curves).
     %
     %   Optional Key-Value Pairs:
@@ -11,9 +11,10 @@ function handles = easy_plot(x, varargin)
     %   'Title'     - Title of the plot.
     %   'XLabel'    - Label for the x-axis.
     %   'YLabel'    - Label for the y-axis.
-    %   'Legend'    - Cell array of legend entries, length should match number of curves.
+    %   'Legend'    - Cell array of legend entries, should match number of curves.
     %   'ShowFigure' - Whether to display the plot window, boolean, default is true.
     %   'SaveAs'    - Path and filename to save the plot. If empty, the plot is not saved.
+    %   'SilentSave' - Whether to suppress the saving message.
 
     % Parse the input arguments
     p = inputParser;
@@ -40,11 +41,15 @@ function handles = easy_plot(x, varargin)
     SaveAsFile = p.Results.SaveAs;
     SilentSave = p.Results.SilentSave;
 
-    % Handle single or multiple y data
+    % Convert x and y to cell arrays if they are not already
     if ~iscell(y_data)
         y_data = {y_data};
     end
     numCurves = length(y_data);  % Number of curves to plot
+
+    if ~iscell(x)  % If x is a single array, replicate it for each y
+        x = repmat({x}, 1, numCurves);
+    end
 
     % Automatically assign colors, line styles, and markers
     defaultColors = lines(numCurves);  % Default MATLAB colors
@@ -61,18 +66,19 @@ function handles = easy_plot(x, varargin)
     handles = gobjects(1, numCurves);  % Pre-allocate handles array
 
     for i = 1:numCurves
-        y = y_data{i};
+        xi = x{i};
+        yi = y_data{i};
         plotColor = defaultColors(i, :);  % Assign color
         autoLineStyle = lineStyles{mod(i-1, length(lineStyles)) + 1};  % Assign line style
         autoMarker = markers{mod(i-1, length(markers)) + 1};  % Assign marker style
 
         % Automatically adjust MarkerIndices (marker spacing)
-        numMarkers = min(10, length(x));  % Ensure at least 10 markers
-        offset = round((i-1) * length(x) / (numCurves + 1));  % Offset each curve's markers
-        markerIdx = mod(round(linspace(1, length(x), numMarkers)) + offset, length(x)) + 1;  % Generate marker indices
+        numMarkers = min(10, length(xi));  % Ensure at least 10 markers
+        offset = round((i-1) * length(xi) / (numCurves + 1));  % Offset each curve's markers
+        markerIdx = mod(round(linspace(1, length(xi), numMarkers)) + offset, length(xi)) + 1;  % Generate marker indices
 
         % Plot the curve
-        handles(i) = plot(x, y, 'LineWidth', LineWidth, ...
+        handles(i) = plot(xi, yi, 'LineWidth', LineWidth, ...
             'LineStyle', autoLineStyle, 'Marker', autoMarker, ...
             'MarkerIndices', markerIdx, 'Color', plotColor);
     end
