@@ -20,6 +20,8 @@ xright = pi;
 pk = 2; % Pk
 gk = 5; % Gauss Points
 
+dim = 3;
+
 basis = MatLegendre(pk+1);
 basis_dx = MatLegendreDx(pk+1);
 
@@ -34,12 +36,12 @@ for w = 1:n
     [x,dx] = mesh_init_1d(xleft,xright,nxlist(w));
 
     init_func = @(s) eulereqs_sin_exact(s,0,alpha,beta,omega,phi,u0_ic,p0_ic);
-    uh0 = dg_projection_eulereqs(init_func, x, dx, pk, gk, basis);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t1, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, 0);
+    uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t1, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, 0);
 
     u_exact_func = @(s) eulereqs_sin_exact(s,t1,alpha,beta,omega,phi,u0_ic,p0_ic);
 
-    errors(:,w) = dg_errors_eulereqs(uh, u_exact_func, x, dx, pk, gk, basis);
+    errors(:,w) = dg_errors_eqs(uh, u_exact_func, x, dx, pk, gk, basis, dim, @eulereqs_trans2raw);
 end
 
 show_results(nxlist,errors(1,:),errors(2,:),errors(3,:));
@@ -54,7 +56,7 @@ nx_ref = 320;
 [x_ref,dx_ref] = mesh_init_1d(xleft,xright,nx_ref);
 
 exact_ref_func = @(s) eulereqs_sin_exact(s,t2,alpha,beta,omega,phi,u0_ic,p0_ic);
-u_exact_ref = dg_projection_eulereqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis);
+u_exact_ref = dg_projection_eqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis, dim);
 
 figure;
 hold on
@@ -63,8 +65,8 @@ for w=1:2
     [x,dx] = mesh_init_1d(xleft,xright,nxlist2(w));
 
     init_func = @(s) eulereqs_sin_exact(s,0,alpha,beta,omega,phi,u0_ic,p0_ic);
-    uh0 = dg_projection_eulereqs(init_func, x, dx, pk, gk, basis);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t2, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, 0);
+    uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t2, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, 0);
 
     v = basis.eval(0,pk+1); % column vector
 

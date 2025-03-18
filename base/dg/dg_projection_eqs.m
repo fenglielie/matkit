@@ -1,4 +1,4 @@
-function u = dg_projection_eulereqs(f, x, dx, pk, gk, basis)
+function u = dg_projection_eqs(f, x, dx, pk, gk, basis, dim)
 
     assert(2*gk >= basis.funcs_num, 'insufficient precision of numerical quadrature formula');
     [points, weights] = gauss_legendre(gk);
@@ -6,17 +6,18 @@ function u = dg_projection_eulereqs(f, x, dx, pk, gk, basis)
     M = basis.eval(points, pk+1);
     W = diag(weights);
 
-    M3 = kron(eye(3), M);
-    W3 = kron(eye(3), W);
+    Md = kron(eye(dim), M);
+    Wd = kron(eye(dim), W);
 
     nx = size(x,2);
-    z = zeros(3*gk,nx);
+    z = zeros(dim*gk,nx);
 
+    v_cs = cell(dim,1);
     for idx = 1:nx
         y = x(idx) + dx/2 * points; % column vector
-        [v1,v2,v3] = f(y);
-        z(:,idx) = [v1; v2; v3];
+        [v_cs{:}] = f(y);
+        z(:,idx) = cell2mat(v_cs);
     end
 
-    u = (M3' * W3 * M3) \ (M3' * W3 * z);
+    u = (Md' * Wd * Md) \ (Md' * Wd * z);
 end

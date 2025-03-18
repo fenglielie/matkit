@@ -13,6 +13,8 @@ xright = 2;
 pk = 2; % Pk
 gk = 5; % Gauss Points
 
+dim = 3;
+
 basis = MatLegendre(pk+1);
 basis_dx = MatLegendreDx(pk+1);
 
@@ -35,8 +37,8 @@ for w=1:2
     [x,dx] = mesh_init_1d(xleft,xright,nxlist(w));
 
     init_func = @(s) eulereqs_sod_init(s);
-    uh0 = dg_projection_eulereqs(init_func, x, dx, pk, gk, basis);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, 1);
+    uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, 1);
 
     vc = basis.eval(0,pk+1); % column vector
 

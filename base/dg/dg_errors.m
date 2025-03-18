@@ -1,4 +1,4 @@
-function errors = dg_errors(uh, f, x, dx, pk, gk, basis)
+function errors = dg_errors(uh, u, x, dx, pk, gk, basis)
     % errors(1,:): L1
     % errors(2,:): L2
     % errors(3,:): Linf
@@ -10,7 +10,7 @@ function errors = dg_errors(uh, f, x, dx, pk, gk, basis)
     W = diag(weights);
 
     y = M * uh;
-    y_exact = f(x + dx/2 * points);
+    y_exact = u(x + dx/2 * points);
     % x is a row vector, points is a column vector
 
     diff = y - y_exact;
