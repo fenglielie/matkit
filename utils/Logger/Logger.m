@@ -151,7 +151,7 @@ classdef Logger < handle
         end
 
         function ts = get_timestamp(~)
-            ts = datestr(now, 'yyyy-mm-dd HH:MM:SS.FFF'); %#ok<TNOW1,DATST>
+            ts = datetime('now','Format','yyyy-MM-dd HH:mm:ss.SSS');
         end
 
         function str = get_level_str(~, level)
