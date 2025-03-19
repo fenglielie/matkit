@@ -5,6 +5,26 @@ import argparse
 import json
 import sys
 
+# 定义禁止使用的 MATLAB 关键字/内置函数
+FORBIDDEN_DICT = [
+    "exist",
+    "global",
+    # "nargin",
+    "nargout",
+    "narginchk",
+    "nargoutchk",
+    "inputname",
+    "varargin",
+    "varargout",
+    # "eval",
+    "evalc",
+    "feval",
+    "evalin",
+    "assignin",
+    "who",
+    "whos",
+]
+
 
 def split_code_comment(line):
     """
@@ -140,11 +160,43 @@ def check_no_chinese(task):
     return msgs
 
 
+def check_forbidden_keywords(task):
+    """
+    检查文件的代码部分是否使用了禁止的 MATLAB 关键字。
+    """
+    global FORBIDDEN_DICT
+
+    msgs = []
+    file_path = task["matlab_file_path"]
+
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line_num, line in enumerate(f, start=1):
+                code_part = split_code_comment(line)
+                words = code_part.split()  # 仅按空格拆分，避免误判子字符串
+                for keyword in FORBIDDEN_DICT:
+                    if keyword in words:
+                        msgs.append(
+                            f"Line {line_num}: Forbidden keyword '{keyword}' detected: {line.strip()}"
+                        )
+    except Exception as e:
+        msgs.append(f"Error reading file {file_path}: {e}")
+
+    return msgs
+
+
 def run_check_tasks(tasks):
     results = []
+    results = []
     for task in tasks:
-        msgs = check_no_string(task) + check_empty_line(task) + check_no_chinese(task)
+        msgs = (
+            check_no_string(task)
+            + check_empty_line(task)
+            + check_no_chinese(task)
+            + check_forbidden_keywords(task)  # 添加关键字检查
+        )
         results.append({**task, "msgs": msgs, "status": len(msgs) == 0})
+    return results
     return results
 
 
@@ -199,6 +251,8 @@ def output_to_logfile(tasks_results):
     try:
         with open("matlab_check.log", "w", encoding="utf-8") as f:
             for task_result in tasks_results:
+                if task_result["status"]:
+                    continue
                 json.dump(task_result, f, ensure_ascii=False, indent=4)
                 f.write("\n")
         print("Check results successfully written to matlab_check.log")
