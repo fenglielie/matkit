@@ -38,7 +38,7 @@ for w=1:2
 
     init_func = @(s) eulereqs_sod_init(s);
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, 1);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, true);
 
     vc = basis.eval(0,pk+1); % column vector
 
@@ -58,7 +58,7 @@ for w=1:2
 
     primitive = {rho_values, u_values, p_values, e_values};
     primitive_ref = {rho_values_ref, u_values_ref, p_values_ref, e_values_ref};
-    names = {"Density", "Velocity", "Pressure", "Internal Energy"};
+    names = {'Density', 'Velocity', 'Pressure', 'Internal Energy'};
 
     for s = 1:4
         subplot(2, 2, s);
@@ -84,11 +84,9 @@ for w=1:2
 end
 
 function [v1,v2,v3] = eulereqs_sod_init(x)
-    % 返回守恒变量形式 v = [v1,v2,v3] = [rho, rho u, E]
-    % 尺寸与输入的x一致
-
-    % [1,0,1]
-    % [0.125,0,0.1]
+    % v = [v1,v2,v3] = [rho, rho u, E]
+    % left [1,0,1]
+    % right [0.125,0,0.1]
 
     condition = x < 0;
 

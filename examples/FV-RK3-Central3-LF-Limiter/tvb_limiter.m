@@ -16,7 +16,7 @@ function [ul_plus, ur_minus] = tvb_limiter_in(ul_plus, u, ur_minus, dx, tvb_m)
     end
 end
 
-% TODO: 这两个函数可以被向量化
+% FUTURE: vectorize TVB/TVD function
 
 % m > 0 -> TVB
 % m = 0 -> TVD

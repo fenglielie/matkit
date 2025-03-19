@@ -37,7 +37,7 @@ for w = 1:n
 
     init_func = @(s) eulereqs_sin_exact(s,0,alpha,beta,omega,phi,u0_ic,p0_ic);
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t1, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, 0);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t1, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, false);
 
     u_exact_func = @(s) eulereqs_sin_exact(s,t1,alpha,beta,omega,phi,u0_ic,p0_ic);
 
@@ -66,7 +66,7 @@ for w=1:2
 
     init_func = @(s) eulereqs_sin_exact(s,0,alpha,beta,omega,phi,u0_ic,p0_ic);
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t2, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, 0);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t2, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, false);
 
     v = basis.eval(0,pk+1); % column vector
 
@@ -81,8 +81,7 @@ end
 hold off
 
 function [v1,v2,v3] = eulereqs_sin_exact(x,t,alpha,beta,omega,phi,u0,p0)
-    % 返回守恒变量形式 v = [v1,v2,v3] = [rho, rho u, E]
-    % 尺寸与输入的x一致
+    % v = [v1,v2,v3] = [rho, rho u, E]
 
     rho = alpha + beta * sin(omega * (x - u0 * t) + phi);
     u = u0 * ones(size(x));
