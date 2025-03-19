@@ -9,14 +9,14 @@ function u = dg_projection_eqs(f, x, dx, pk, gk, basis, dim)
     Md = kron(eye(dim), M);
     Wd = kron(eye(dim), W);
 
-    nx = size(x,2);
-    z = zeros(dim*gk,nx);
+    nx = size(x, 2);
+    z = zeros(dim*gk, nx);
 
-    v_cs = cell(dim,1);
+    v_cs = cell(dim, 1);
     for idx = 1:nx
         y = x(idx) + dx/2 * points; % column vector
         [v_cs{:}] = f(y);
-        z(:,idx) = cell2mat(v_cs);
+        z(:, idx) = cell2mat(v_cs);
     end
 
     u = (Md' * Wd * Md) \ (Md' * Wd * z);

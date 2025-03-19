@@ -1,7 +1,7 @@
 function errors = dg_errors(uh, u, x, dx, pk, gk, basis)
-    % errors(1,:): L1
-    % errors(2,:): L2
-    % errors(3,:): Linf
+    % errors(1, :): L1
+    % errors(2, :): L2
+    % errors(3, :): Linf
 
     assert(2*gk >= basis.funcs_num, 'insufficient precision of numerical quadrature formula');
     [points, weights] = gauss_legendre(gk);

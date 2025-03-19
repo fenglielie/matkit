@@ -25,7 +25,7 @@ function test_MatLegendre()
         ]; % Manually computed values of P_0 to P_4 at [-1, -0.5, 0, 0.5, 1]
 
     % Validate results
-    assert(size(u,1) == length(x) && size(u,2) == n, 'eval function returned incorrect matrix size.');
+    assert(size(u, 1) == length(x) && size(u, 2) == n, 'eval function returned incorrect matrix size.');
     assert(all(abs(u(:) - expected_u(:)) < 1e-6), 'eval function returned incorrect values.');
 
 

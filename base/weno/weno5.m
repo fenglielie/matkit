@@ -1,7 +1,7 @@
 function [res_ul, res_ur] = weno5(u)
     % WENO-JS 5
 
-    assert(size(u,1)==1);
+    assert(size(u, 1)==1);
 
     % linear weights
     d_l = [3.0 / 10; 3.0 / 5; 1.0 / 10];
@@ -28,21 +28,21 @@ function [res_ul, res_ur] = weno5(u)
     w_l = a_l ./ sum(a_l, 1);
     w_r = a_r ./ sum(a_r, 1);
 
-    coeff_l = [-1/6,  5/6,  1/3;
-        1/3,  5/6, -1/6;
-        11/6, -7/6,  1/3];
+    coeff_l = [-1/6, 5/6, 1/3;
+        1/3, 5/6, -1/6;
+        11/6, -7/6, 1/3];
 
-    coeff_r = [ 1/3, -7/6,  11/6;
-        -1/6,  5/6,   1/3;
-        1/3,  5/6,  -1/6];
+    coeff_r = [ 1/3, -7/6, 11/6;
+        -1/6, 5/6, 1/3;
+        1/3, 5/6, -1/6];
 
     % reconstruct
-    u_l =  [coeff_l(1,:) * ul_mat;
-        coeff_l(2,:) * u_mat;
-        coeff_l(3,:) * ur_mat];
-    u_r = [coeff_r(1,:) * ul_mat;
-        coeff_r(2,:) * u_mat;
-        coeff_r(3,:) * ur_mat];
+    u_l =  [coeff_l(1, :) * ul_mat;
+        coeff_l(2, :) * u_mat;
+        coeff_l(3, :) * ur_mat];
+    u_r = [coeff_r(1, :) * ul_mat;
+        coeff_r(2, :) * u_mat;
+        coeff_r(3, :) * ur_mat];
 
     res_ul = sum(w_l .* u_l, 1);
     res_ur = sum(w_r .* u_r, 1);

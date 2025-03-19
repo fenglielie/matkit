@@ -50,7 +50,7 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     p0 = max(p0_PV, 1e-8);
 
     % Solve for the intersection point to get the intermediate state p and u
-    options = optimset('TolFun', 1.0e-12,'Display', 'off');
+    options = optimset('TolFun', 1.0e-12, 'Display', 'off');
     [p_s_tmp, ~, exitflag] = fsolve(func, p0, options);
     p_s = p_s_tmp;
     u_s = 0.5 * (phi_l(p_s) + phi_r(p_s));

@@ -28,7 +28,7 @@ function test_MatBase()
     ];
 
     % Validate results
-    assert(size(u,1) == length(x) && size(u,2) == n, 'eval function returned incorrect matrix size.');
+    assert(size(u, 1) == length(x) && size(u, 2) == n, 'eval function returned incorrect matrix size.');
     assert(all(abs(u(:) - expected_u(:)) < 1e-6), 'eval function returned incorrect values.');
 
     fprintf('Test 2 passed: eval function computes correct values.\n');

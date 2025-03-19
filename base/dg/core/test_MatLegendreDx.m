@@ -25,7 +25,7 @@ function test_MatLegendreDx()
         ];  % Manually computed values of P'_0 to P'_4 at [-1, -0.5, 0, 0.5, 1]
 
     % Validate results
-    assert(size(u,1) == length(x) && size(u,2) == n, 'eval function returned incorrect matrix size.');
+    assert(size(u, 1) == length(x) && size(u, 2) == n, 'eval function returned incorrect matrix size.');
     assert(all(abs(u(:) - expected_u(:)) < 1e-6), 'eval function returned incorrect values.');
 
     fprintf('Test 2 passed: eval function computes correct derivatives of Legendre polynomials.\n');

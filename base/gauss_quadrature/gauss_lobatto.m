@@ -4,8 +4,8 @@ function [x, w] = gauss_lobatto(n)
     %   n - Number of nodes (integer).
     %
     % Output:
-    %   x - Nodes in [-1,1], size(x) = [n,1].
-    %   w - Weights, size(w) = [n,1].
+    %   x - Nodes in [-1, 1], size(x) = [n, 1].
+    %   w - Weights, size(w) = [n, 1].
 
     validateattributes(n, {'numeric'}, {'integer', 'nonnegative', '>=', 2});
 
