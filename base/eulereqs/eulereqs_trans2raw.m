@@ -1,6 +1,5 @@
 function [rho,u,p] = eulereqs_trans2raw(v1,v2,v3)
-    % 从守恒变量 [v1,v2,v3] 改为原始变量 [rho,u,p]
-    % 尺寸保持和输入的一致
+    % [v1,v2,v3] -> [rho,u,p]
 
     gamma = 1.4;
     rho = v1;

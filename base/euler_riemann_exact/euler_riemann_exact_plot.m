@@ -15,7 +15,7 @@ function [fig, ax] = euler_riemann_exact_plot( ...
     e = 1/(gamma-1) * p ./ rho;
 
     primitive = {rho, u, p, e};
-    names = {"Density", "Velocity", "Pressure", "Internal Energy"};
+    names = {'Density', 'Velocity', 'Pressure', 'Internal Energy'};
 
     fig = figure;
     for w = 1:4

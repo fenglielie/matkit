@@ -1,5 +1,4 @@
 function f = eulereqs_f(v)
-    % size(v) = [3*gk,n]
     assert(mod(size(v,1), 3) == 0)
 
     gk = size(v,1)/3;
