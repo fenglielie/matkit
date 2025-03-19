@@ -2,7 +2,7 @@ classdef Logger < handle
     % LOGGER Custom logging class for MATLAB
     %
     % Example usage:
-    %   logger = Logger(level=Logger.DEBUG,format='none');
+    %   logger = Logger(level=Logger.DEBUG, format='none');
     %   logger.open_file('app.log', 'append');
     %   logger.info('Program started');
     %   logger.warn('Low memory');
@@ -57,7 +57,7 @@ classdef Logger < handle
             end
 
             obj.fileID = fid;
-            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (level: %s)\n',...
+            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (level: %s)\n', ...
                 obj.get_timestamp(), obj.get_level_str(obj.level));
         end
 
@@ -70,7 +70,7 @@ classdef Logger < handle
             end
 
             obj.fileID = fid;
-            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (level: %s)\n',...
+            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (level: %s)\n', ...
                 obj.get_timestamp(), obj.get_level_str(obj.level));
         end
 
@@ -151,16 +151,16 @@ classdef Logger < handle
         end
 
         function ts = get_timestamp(~)
-            ts = datetime('now','Format','yyyy-MM-dd HH:mm:ss.SSS');
+            ts = datetime('now', 'Format', 'yyyy-MM-dd HH:mm:ss.SSS');
         end
 
         function str = get_level_str(~, level)
             switch level
                 case Logger.DEBUG, str = 'DEBUG';
-                case Logger.INFO,  str = 'INFO';
-                case Logger.WARN,  str = 'WARN';
+                case Logger.INFO, str = 'INFO';
+                case Logger.WARN, str = 'WARN';
                 case Logger.ERROR, str = 'ERROR';
-                otherwise,         str = 'UNKNOWN';
+                otherwise, str = 'UNKNOWN';
             end
         end
     end

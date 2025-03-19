@@ -22,31 +22,31 @@ basis_dx = MatLegendreDx(pk+1);
 %% plot test
 
 t = 0.6;
-nxlist = [40,160];
+nxlist = [40, 160];
 
 % nx_ref = 320;
-% [x_ref,dx_ref] = mesh_init_1d(xleft,xright,nx_ref);
+% [x_ref, dx_ref] = mesh_init_1d(xleft, xright, nx_ref);
 
-% exact_ref_func = @(s) eulereqs_sin_exact(s,t2,alpha,beta,omega,phi,u0_ic,p0_ic);
+% exact_ref_func = @(s) eulereqs_sin_exact(s, t2, alpha, beta, omega, phi, u0_ic, p0_ic);
 % u_exact_ref = dg_projection_eulereqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis);
 
 
 for w=1:2
     figure;
 
-    [x,dx] = mesh_init_1d(xleft,xright,nxlist(w));
+    [x, dx] = mesh_init_1d(xleft, xright, nxlist(w));
 
     init_func = @(s) eulereqs_sod_init(s);
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
     uh = dg_rk3_scheme_eqs(uh0, dx, t, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, true);
 
-    vc = basis.eval(0,pk+1); % column vector
+    vc = basis.eval(0, pk+1); % column vector
 
-    v1 = vc' * uh(1:(pk+1),:);
-    v2 = vc' * uh(pk+2:2*(pk+1),:);
-    v3 = vc' * uh(2*(pk+1)+1:3*(pk+1),:);
+    v1 = vc' * uh(1:(pk+1), :);
+    v2 = vc' * uh(pk+2:2*(pk+1), :);
+    v3 = vc' * uh(2*(pk+1)+1:3*(pk+1), :);
 
-    [rho_values, u_values, p_values] = eulereqs_trans2raw(v1,v2,v3);
+    [rho_values, u_values, p_values] = eulereqs_trans2raw(v1, v2, v3);
 
     gamma = 1.4;
     e_values = p_values ./ (gamma - 1);
@@ -83,10 +83,10 @@ for w=1:2
 
 end
 
-function [v1,v2,v3] = eulereqs_sod_init(x)
-    % v = [v1,v2,v3] = [rho, rho u, E]
-    % left [1,0,1]
-    % right [0.125,0,0.1]
+function [v1, v2, v3] = eulereqs_sod_init(x)
+    % v = [v1, v2, v3] = [rho, rho u, E]
+    % left [1, 0, 1]
+    % right [0.125, 0, 0.1]
 
     condition = x < 0;
 
@@ -102,5 +102,5 @@ function [v1,v2,v3] = eulereqs_sod_init(x)
     u(~condition) = 0;
     p(~condition) = 0.1;
 
-    [v1,v2,v3] = eulereqs_trans2cv(rho,u,p);
+    [v1, v2, v3] = eulereqs_trans2cv(rho, u, p);
 end

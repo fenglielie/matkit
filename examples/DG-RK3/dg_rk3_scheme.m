@@ -20,8 +20,8 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
     assert(isa(f, 'function_handle'), 'f must be a function handle.');
     assert(isa(fhat, 'function_handle'), 'fhat must be a function handle.');
     assert(isa(df, 'function_handle'), 'df must be a function handle.');
-    assert(isnumeric(pk) && isscalar(pk) && pk > 0 && mod(pk,1) == 0, 'pk must be a positive integer.');
-    assert(isnumeric(gk) && isscalar(gk) && gk > 0 && mod(gk,1) == 0, 'gk must be a positive integer.');
+    assert(isnumeric(pk) && isscalar(pk) && pk > 0 && mod(pk, 1) == 0, 'pk must be a positive integer.');
+    assert(isnumeric(gk) && isscalar(gk) && gk > 0 && mod(gk, 1) == 0, 'gk must be a positive integer.');
     assert(isa(basis, 'MatBase'), 'basis must be an object of class MatBase or its subclass.');
     assert(isa(basis_dx, 'MatBase'), 'basis_dx must be an object of class MatBase or its subclass.');
 
@@ -53,9 +53,9 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
         dt = 1/((2*pk+1)*max(abs(df(uh_mid))))*dx^((pk+1)/3);
         dt = min([dt, tend - tnow]);
 
-        u1 = u + dt * L_op(u,dx,f,fhat,df,params);
-        u2 = 3/4 * u + 1/4 * (u1 + dt * L_op(u1,dx,f,fhat,df,params));
-        u3 = 1/3 * u + 2/3 * (u2 + dt * L_op(u2,dx,f,fhat,df,params));
+        u1 = u + dt * L_op(u, dx, f, fhat, df, params);
+        u2 = 3/4 * u + 1/4 * (u1 + dt * L_op(u1, dx, f, fhat, df, params));
+        u3 = 1/3 * u + 2/3 * (u2 + dt * L_op(u2, dx, f, fhat, df, params));
         u = u3;
 
         tnow = tnow + dt;
@@ -63,7 +63,7 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
 end
 
 
-function result = L_op(u,dx,f,fhat,df,params)
+function result = L_op(u, dx, f, fhat, df, params)
 
     ul = params.vl' * u; % row vector
     ur = params.vr' * u;

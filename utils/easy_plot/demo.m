@@ -4,7 +4,7 @@ y1 = sin(x1);  % First curve (sin)
 y2 = cos(x2);  % Second curve (cos)
 
 % Plot the curves with automatic styles and show the figure
-easy_plot({x1,x2}, {y1, y2}, 'Title', 'Sine and Cosine Waves', ...
+easy_plot({x1, x2}, {y1, y2}, 'Title', 'Sine and Cosine Waves', ...
     'XLabel', 'x', 'YLabel', 'y', 'Legend', {'sin(x)', 'cos(x)'});
 
 

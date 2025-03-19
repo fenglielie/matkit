@@ -1,6 +1,5 @@
 function handles = easy_plot(x, varargin)
-    % easy_plot - A flexible plotting function that supports multiple curves,
-    % allowing each curve to have a different x-axis.
+    % easy_plot - A flexible plotting function that supports multiple curves.
     %
     % Inputs:
     %   x           - x data, can be a vector or a cell array of vectors.

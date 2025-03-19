@@ -14,45 +14,45 @@ xright = pi;
 %% order test
 
 t1 = 0.5;
-nxlist = [10,20,40,80,160,320,640];
+nxlist = [10, 20, 40, 80, 160, 320, 640];
 n = length(nxlist);
-errors = zeros(3,n);
+errors = zeros(3, n);
 
 for w = 1:n
-    [x,dx] = mesh_init_1d(xleft,xright,nxlist(w));
+    [x, dx] = mesh_init_1d(xleft, xright, nxlist(w));
 
     uh0 = alpha + beta * sin(x);
-    uh = fd_rk3_weno5_scheme(uh0,dx,t1,@burgers_fl,@burgers_fr,@burgers_df);
+    uh = fd_rk3_weno5_scheme(uh0, dx, t1, @burgers_fl, @burgers_fr, @burgers_df);
 
-    u_exact = burgers_sin_exact(x,t1,alpha,beta);
+    u_exact = burgers_sin_exact(x, t1, alpha, beta);
 
-    errors(1,w) = sum(abs(uh - u_exact)) * dx;
-    errors(2,w) = sqrt(sum(abs(uh - u_exact).^2) * dx);
-    errors(3,w) = max(abs(uh - u_exact));
+    errors(1, w) = sum(abs(uh - u_exact)) * dx;
+    errors(2, w) = sqrt(sum(abs(uh - u_exact).^2) * dx);
+    errors(3, w) = max(abs(uh - u_exact));
 end
 
-show_results(nxlist,errors(1,:),errors(2,:),errors(3,:));
+show_results(nxlist, errors(1, :), errors(2, :), errors(3, :));
 
 %% plot test
 
 t2 = 1.5;
-nxlist2 = [20,80];
+nxlist2 = [20, 80];
 nx_ref = 320;
-[x_ref,dx_ref] = mesh_init_1d(xleft,xright,nx_ref);
+[x_ref, dx_ref] = mesh_init_1d(xleft, xright, nx_ref);
 
-u_exact_ref = burgers_sin_exact(x_ref,t2,alpha,beta);
+u_exact_ref = burgers_sin_exact(x_ref, t2, alpha, beta);
 
 figure(w);
 hold on
-plot(x_ref,u_exact_ref)
+plot(x_ref, u_exact_ref)
 
 for w=1:2
-    [x,dx] = mesh_init_1d(xleft,xright,nxlist2(w));
+    [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
 
     uh0 = alpha + beta * sin(x);
-    uh = fd_rk3_weno5_scheme(uh0,dx,t2,@burgers_fl,@burgers_fr,@burgers_df);
+    uh = fd_rk3_weno5_scheme(uh0, dx, t2, @burgers_fl, @burgers_fr, @burgers_df);
 
-    plot(x,uh)
+    plot(x, uh)
 end
 
 hold off
