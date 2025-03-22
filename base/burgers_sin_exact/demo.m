@@ -43,11 +43,11 @@ for t = [0, 0.4, 2.0, 3.0]
 
     if t > 1/abs(beta)
         u0 = @(s) alpha + beta * sin(s);
-        plot(x + u0(x) * t, u0(x), LineStyle='--', DisplayName = sprintf("t = %.2f (ref)", t));
+        plot(x + u0(x) * t, u0(x), LineStyle='--', DisplayName = sprintf('t = %.2f (ref)', t));
     end
 
     u_exact = burgers_sin_exact(x, t, alpha, beta);
-    plot(x, u_exact, LineWidth = 2, DisplayName = sprintf("t = %.2f", t))
+    plot(x, u_exact, LineWidth = 2, DisplayName = sprintf('t = %.2f', t))
 end
 
 xlim([xleft, xright])

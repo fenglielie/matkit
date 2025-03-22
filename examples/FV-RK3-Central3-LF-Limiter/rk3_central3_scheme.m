@@ -1,4 +1,6 @@
 function u = rk3_central3_scheme(u, dx, tend, fhat, df, limiter)
+    % rk3_central3_scheme
+    %
     % INPUT:
     %   u         - Initial solution, must be a numeric vector or matrix.
     %   dx        - Spatial step size, must be a positive scalar.

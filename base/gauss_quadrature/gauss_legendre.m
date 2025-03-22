@@ -1,11 +1,20 @@
 function [x, w] = gauss_legendre(n)
-    % Computation of the Nodes and Weights for the Gauss-Legendre Quadrature.
-    % Input:
-    %   n - Number of nodes (integer).
+    % GAUSS_LEGENDRE Computation of the Nodes and Weights for the Gauss-Legendre Quadrature.
     %
-    % Output:
-    %   x - Nodes in [-1, 1], size(x) = [n, 1].
-    %   w - Weights, size(w) = [n, 1].
+    % INPUT:
+    %   n   - Number of nodes. (n >= 2)
+    %
+    % OUTPUT:
+    %   x   - Nodes in [-1, 1], size(x) = [n, 1].
+    %   w   - Weights, size(w) = [n, 1].
+    %
+    % EXAMPLE:
+    %   [x, w] = gauss_legendre(3);
+    %   % x = [0.7746; 0; -0.7746];
+    %   % w = [0.5556; 0.8889; 0.5556];
+    %
+    % NOTE:
+    %   x(i) from 1 to -1
 
     validateattributes(n, {'numeric'}, {'integer', 'nonnegative', '>=', 2});
 

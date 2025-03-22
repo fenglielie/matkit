@@ -1,4 +1,6 @@
 function u = fd_rk3_weno5_scheme(u, dx, tend, fl, fr, df)
+    % fd_rk3_weno5_scheme
+    %
     % INPUT:
     %   u         - Initial solution, must be a numeric vector or matrix.
     %   dx        - Spatial step size, must be a positive scalar.

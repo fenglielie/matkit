@@ -1,12 +1,12 @@
 classdef MatBase < handle
-    % MatBase: A base class for Discontinuous Galerkin (DG) basis functions.
+    % MATBASE A base class for Discontinuous Galerkin (DG) basis functions.
     %
-    % Properties:
+    % MatBase Properties:
     %   funcs      - Cell array of function handles representing the basis functions.
     %   funcs_num  - Number of basis functions.
     %
-    % Methods:
-    %   eval(x, n) - Evaluate the first 'n' basis functions at points 'x'.
+    % MatBase Methods:
+    %   eval       - Evaluate the first 'n' basis functions at points 'x'.
 
     properties
         funcs      % Basis function list (cell array of function handles)
@@ -17,10 +17,10 @@ classdef MatBase < handle
         function obj = MatBase(funcs)
             % Constructor for MatBase
             %
-            % Parameters:
-            %   funcs - A cell array of function handles representing basis functions.
+            % INPUT:
+            %   funcs   - A cell array of function handles representing basis functions.
             %
-            % Example:
+            % EXAMPLE:
             %   funcs = {@(x) x, @(x) x.^2, @(x) x.^3, @(x) sin(x)};
             %   basis = MatBase(funcs);
 
@@ -33,18 +33,18 @@ classdef MatBase < handle
         end
 
         function u = eval(obj, x, n)
-            % Evaluate the first 'n' basis functions at points 'x'.
+            % EVAL Evaluate the first 'n' basis functions at points 'x'.
             %
-            % Parameters:
-            %   x - A vector of evaluation points in the range [-1, 1].
-            %   n - The number of basis functions to evaluate.
+            % INPUT:
+            %   x   - A vector of evaluation points in the range [-1, 1].
+            %   n   - The number of basis functions to evaluate.
             %
-            % Returns:
-            %   u - A matrix containing function values.
-            %       - If x is a column vector (m, 1), returns an (m, n) matrix.
-            %       - If x is a row vector (1, m), returns an (n, m) matrix.
+            % OUTPUT:
+            %   u   - A matrix containing function values.
+            %           - If x is a column vector (m, 1), returns an (m, n) matrix.
+            %           - If x is a row vector (1, m), returns an (n, m) matrix.
             %
-            % Example:
+            % EXAMPLE:
             %   funcs = {@(x) x, @(x) x.^2, @(x) x.^3};
             %   basis = MatBase(funcs);
             %   x = linspace(-1, 1, 5);

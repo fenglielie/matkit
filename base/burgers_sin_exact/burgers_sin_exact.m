@@ -1,16 +1,17 @@
 function u = burgers_sin_exact(x, t, alpha, beta)
-    % BURGERS_SIN_EXACT: Computes the exact solution of Burgers' equation (u_t + u * u_x = 0)
+    % BURGERS_SIN_EXACT Computes the exact solution of Burgers' equation (u_t + u * u_x = 0)
     %       with 2pi periodic boundary condition at time t.
-    %       u(x, 0) = alpha + beta * sin(x) in [-pi, pi]
     %
-    % Parameters:
-    %   x     - Spatial coordinate (matrix, vector, or scalar), numeric
-    %   t     - Time (scalar), numeric and non-negative
-    %   alpha - Scalar, numeric
-    %   beta  - Scalar, numeric
+    %       u(x, 0) = alpha + beta * sin(x), x in [-pi, pi]
     %
-    % Returns:
-    %   u - Solution of Burgers' equation at (x, t). size(u) == size(x)
+    % INPUT:
+    %   x       - Spatial coordinate (matrix, vector, or scalar), numeric
+    %   t       - Time (scalar), numeric and non-negative
+    %   alpha   - Scalar, numeric
+    %   beta    - Scalar, numeric
+    %
+    % OUTPUT:
+    %   u       - Solution of Burgers' equation at (x, t). size(u) == size(x)
 
     assert(isnumeric(x), 'x must be a numeric array.');
     assert(isnumeric(t) && isscalar(t) && t >= 0, 't must be a non-negative scalar.');

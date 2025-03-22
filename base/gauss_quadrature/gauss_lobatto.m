@@ -1,11 +1,20 @@
 function [x, w] = gauss_lobatto(n)
-    % Computation of the Nodes and Weights for the Gauss-Lobatto Quadrature.
-    % Input:
-    %   n - Number of nodes (integer).
+    % GAUSS_LOBATTO Computation of the Nodes and Weights for the Gauss-Lobatto Quadrature.
     %
-    % Output:
-    %   x - Nodes in [-1, 1], size(x) = [n, 1].
-    %   w - Weights, size(w) = [n, 1].
+    % INPUT:
+    %   n   - Number of nodes. (n >= 2)
+    %
+    % OUTPUT:
+    %   x   - Nodes in [-1, 1], size(x) = [n, 1].
+    %   w   - Weights, size(w) = [n, 1].
+    %
+    % EXAMPLE:
+    %   [x, w] = gauss_lobatto(3);
+    %   % x = [1; 0; -1];
+    %   % w = [0.3333; 1.3333; 0.3333];
+    %
+    % NOTE:
+    %   x(i) from 1 to -1
 
     validateattributes(n, {'numeric'}, {'integer', 'nonnegative', '>=', 2});
 

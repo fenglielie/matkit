@@ -4,26 +4,28 @@ classdef MatLegendreDx < MatBase
     % Constructor:
     %   obj = MatLegendreDx(n) - Generates the first 'n' Legendre polynomial derivatives.
     %
-    % Example:
+    % EXAMPLE:
     %   basis = MatLegendreDx(5);
     %   x = linspace(-1, 1, 10);
     %   u = basis.eval(x, 5);
-
-    % p0(x) = 0
-    % p1(x) = 1
-    % p2(x) = 3*x
-    % p3(x) = (1/2)*(15*x^2 - 3)
-    % p4(x) = (1/8)*(140*x^3 - 60*x)
+    %
+    % NOTE:
+    %   p0(x) = 1
+    %   p1(x) = x
+    %   p2(x) = (1/2)*(3*x^2 - 1)
+    %   p3(x) = (1/2)*(5*x^3 - 3*x)
+    %   p4(x) = (1/8)*(35*x^4 - 30*x^2 + 3)
 
     methods
         function obj = MatLegendreDx(n)
             % Constructor for MatLegendreDx
+            %
             % Generates the first 'n' derivatives of Legendre polynomials.
             %
-            % Parameters:
-            %   n - Number of Legendre polynomials to generate.
+            % INPUT:
+            %   n       - Number of Legendre polynomials to generate.
             %
-            % Example:
+            % EXAMPLE:
             %   basis = MatLegendreDx(5);
 
             if ~isscalar(n) || n < 1 || round(n) ~= n
@@ -41,10 +43,12 @@ classdef MatLegendreDx < MatBase
     methods(Static)
         function dfuncs = generateLegendreDerivatives(n)
             % Generate the first 'n' Legendre polynomial derivatives
-            % Parameters:
-            %   n - Number of polynomials to generate
-            % Returns:
-            %   dfuncs - Cell array of derivative function handles
+            %
+            % INPUT:
+            %   n       - Number of polynomials to generate
+            %
+            % OUTPUT:
+            %   dfuncs  - Cell array of derivative function handles
 
             dfuncs = cell(1, n);
 

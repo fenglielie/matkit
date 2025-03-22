@@ -1,4 +1,6 @@
 function u = godunov_scheme(u, dx, tend, fhat, df)
+    % godunov_scheme
+    %
     % INPUT:
     %   u         - Initial solution, must be a numeric vector or matrix.
     %   dx        - Spatial step size, must be a non-negative scalar.

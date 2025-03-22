@@ -1,9 +1,45 @@
 function [fig, ax] = euler_riemann_exact_plot( ...
-        rho_l, u_l, p_l, rho_r, u_r, p_r, x_l, x_r, t, x_c )
+        rho_l, u_l, p_l, rho_r, u_r, p_r, x_l, x_r, x_c, t)
+    % EULER_RIEMANN_EXACT_PLOT Plots the exact solution of the Euler Riemann problem.
+    %
+    % This function computes and visualizes the exact solution of the Riemann problem
+    % for the 1D Euler equations. It generates two plots:
+    % 1. Primitive variable profiles (density, velocity, pressure, internal energy).
+    % 2. Space-time diagram showing wave propagation.
+    %
+    % INPUT:
+    %   rho_l  - Left state density (must be positive)
+    %   u_l    - Left state velocity
+    %   p_l    - Left state pressure (must be positive)
+    %   rho_r  - Right state density (must be positive)
+    %   u_r    - Right state velocity
+    %   p_r    - Right state pressure (must be positive)
+    %   x_l    - Left boundary of spatial domain
+    %   x_r    - Right boundary of spatial domain (must be greater than x_l)
+    %   x_c    - Initial location of the contact discontinuity (optional, default = 0.0)
+    %   t      - Time at which to compute the solution (must be non-negative)
+    %
+    % OUTPUT:
+    %   fig - Handle to the figure containing primitive variable profiles.
+    %   ax  - Handle to the axes of the space-time diagram.
+    %
+    % EXAMPLE:
+    %   euler_riemann_exact_plot(...
+    %        1.0, 0.0, 1.0, ...
+    %        0.125, 0.0, 0.1, ...
+    %        0.0, 1.0, 0.5, 0.25);
 
-    if nargin < 10
+    assert(rho_l > 0, 'rho_l must be positive.');
+    assert(p_l > 0, 'p_l must be positive.');
+    assert(rho_r > 0, 'rho_r must be positive.');
+    assert(p_r > 0, 'p_r must be positive.');
+    assert(x_r > x_l, 'x_r must be greater than x_l.');
+    assert(t >= 0, 't must be non-negative.');
+
+    if nargin < 10 || isempty(x_c)
         x_c = 0.0;
     end
+    assert(isnumeric(x_c) && isscalar(x_c), 'x_c must be a scalar.');
 
     xlist = linspace(x_l, x_r, 1000);
 
@@ -11,7 +47,7 @@ function [fig, ax] = euler_riemann_exact_plot( ...
     [rho, u, p, more_info] = euler_riemann_exact( ...
         rho_l, u_l, p_l, rho_r, u_r, p_r, gamma, xlist, x_c, t);
 
-    % Calculate internal energy
+    % Compute internal energy
     e = 1/(gamma-1) * p ./ rho;
 
     primitive = {rho, u, p, e};

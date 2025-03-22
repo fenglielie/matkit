@@ -1,4 +1,6 @@
 function u = dg_rk3_scheme_eqs(u, dx, tend, f, fhat, get_alpha, pk, gk, basis, basis_dx, dim, is_riemann)
+    % dg_rk3_scheme_eqs
+    %
     % INPUT:
     %   u           - Initial solution, must be a numeric vector or matrix.
     %   dx          - Spatial step size, must be a non-negative scalar.

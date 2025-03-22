@@ -5,9 +5,10 @@ import argparse
 
 def format_matlab_code(code):
     # 处理逗号 , 保证其后有且仅有一个空格
-    code = re.sub(r",\s*(?!$)", ", ", code)
+    codenew= re.sub(r",\s*(?!$)", ", ", code)
 
-    return code
+    changed = codenew != code
+    return codenew, changed
 
 
 def format_file(input_file, overwrite=False):
@@ -19,12 +20,13 @@ def format_file(input_file, overwrite=False):
     with open(input_file, "r", encoding="utf-8") as f:
         code = f.read()
 
-    formatted_code = format_matlab_code(code)
+    formatted_code, flag = format_matlab_code(code)
 
     if overwrite:
         with open(input_file, "w", encoding="utf-8", newline="\n") as f:
             f.write(formatted_code)
-        print(f"Formatted and overwritten: {input_file}")
+        if flag:
+            print(f"Formatted and overwritten: {input_file}")
     else:
         return code, formatted_code
 

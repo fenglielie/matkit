@@ -1,31 +1,25 @@
 classdef MatLagrangeDx < MatBase
-    % MatLagrangeDx: A class that provides the derivative of Lagrange polynomial basis functions
-    % based on a given set of points.
+    % MatLagrangeDx: A class that provides the derivative of Lagrange polynomial basis functions based on a given set of points.
     %
     % Constructor:
     %   obj = MatLagrangeDx(x_points) - Generates the derivatives of the Lagrange polynomials based on the given points.
     %
-    % Example:
+    % EXAMPLE:
     %   points = [-1, 0, 1];
     %   basis = MatLagrangeDx(points);
     %   x = linspace(-1, 1, 10);
     %   du = basis.eval(x);
-    %
-    % Note:
-    %   The number of polynomials corresponds to the number of input points.
-    %   For n points, n Lagrange polynomials are generated.
-    %
-    %   The eval method computes the derivative values of all the Lagrange polynomials at the given points.
 
     methods
         function obj = MatLagrangeDx(x_points)
             % Constructor for MatLagrangeDx
+            %
             % Generates the derivatives of the Lagrange polynomials based on the given points.
             %
-            % Parameters:
-            %   x_points - A vector of points where the Lagrange polynomials are constructed.
-            %   These points are usually the nodes for interpolation.
-            % Example:
+            % INPUT:
+            %   x_points    - A vector of points where the Lagrange polynomials are constructed.
+            %
+            % EXAMPLE:
             %   basis = MatLagrangeDx([-1, 0, 1]);
 
             if ~isvector(x_points) || length(x_points) < 2
@@ -44,10 +38,11 @@ classdef MatLagrangeDx < MatBase
         function funcs = generateLagrangeFuncsDerivative(x_points)
             % Generate the derivatives of the Lagrange polynomial functions based on the given points
             %
-            % Parameters:
-            %   x_points - A vector of points for interpolation
-            % Returns:
-            %   funcs - Cell array of Lagrange polynomial derivatives function handles
+            % INPUT:
+            %   x_points    - A vector of points for interpolation
+            %
+            % OUTPUT:
+            %   funcs       - Cell array of Lagrange polynomial derivatives function handles
 
             n = length(x_points);
             funcs = cell(1, n);

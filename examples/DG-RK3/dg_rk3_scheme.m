@@ -1,4 +1,6 @@
 function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
+    % dg_rk3_scheme
+    %
     % INPUT:
     %   u         - Initial solution, must be a numeric vector or matrix.
     %   dx        - Spatial step size, must be a non-negative scalar.

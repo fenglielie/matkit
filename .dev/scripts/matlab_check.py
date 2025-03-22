@@ -139,10 +139,7 @@ def check_no_chinese(task):
     """
     msgs = []
     file_path = task["matlab_file_path"]
-    file_name = task["matlab_file_name"]
 
-    if "demo" in file_name.lower() or "test" in file_name.lower():
-        return msgs
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             for line_num, line in enumerate(f, start=1):

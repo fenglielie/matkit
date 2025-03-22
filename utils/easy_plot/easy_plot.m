@@ -1,36 +1,47 @@
-function handles = easy_plot(x, varargin)
+function handles = easy_plot(x, y, varargin)
     % EASY_PLOT A flexible plotting function that supports multiple curves.
     %
     % INPUT:
-    %   x           - x data, can be a vector or a cell array of vectors.
-    %   y           - y data, can be a vector or a cell array of vectors (multiple curves).
+    %   x               - x data, a vector or a cell array of vectors.
+    %   y               - y data, a vector or a cell array of vectors (multiple curves).
     %
     %   Optional Key-Value Pairs:
-    %   'LineWidth' - Line width, default is 1.5.
-    %   'Title'     - Title of the plot.
-    %   'XLabel'    - Label for the x-axis.
-    %   'YLabel'    - Label for the y-axis.
-    %   'Legend'    - Cell array of legend entries, should match number of curves.
-    %   'ShowFigure' - Whether to display the plot window, boolean, default is true.
-    %   'SaveAs'    - Path and filename to save the plot. If empty, the plot is not saved.
-    %   'SilentSave' - Whether to suppress the saving message.
+    %   'LineWidth'     - Line width, default is 1.5.
+    %   'Title'         - Title of the plot.
+    %   'XLabel'        - Label for the x-axis.
+    %   'YLabel'        - Label for the y-axis.
+    %   'Legend'        - Cell array of legend entries, should match number of curves.
+    %   'ShowFigure'    - Whether to display the plot window, boolean, default is true.
+    %   'SaveAs'        - Path and filename to save the plot. If empty, the plot is not saved.
+    %   'SilentSave'    - Whether to suppress the saving message.
+    %
+    % OUTPUT:
+    %   handles         - Handles to the plot axes.
+    %
+    % EXAMPLE:
+    %   x = linspace(0, 10, 100);
+    %   easy_plot(x, {sin(x), cos(x)}, LineWidth=2, Title='Trigonometric Functions', ...
+    %       XLabel='x', YLabel='y', Legend={'sin(x)', 'cos(x)'}, ...
+    %       SaveAs='trig_plot.png');
+    %
+    %   x1 = linspace(0, 10, 100);
+    %   x2 = linspace(0, 10, 200);
+    %   easy_plot({x1, x2}, {sin(x1), cos(x2)}, Title='Sine and Cosine Waves', ...
+    %       XLabel='x', YLabel='y', Legend={'sin(x)', 'cos(x)'});
 
-    % Parse the input arguments
     p = inputParser;
     addRequired(p, 'x');  % x data
-    addOptional(p, 'y', []);  % y data
-    addParameter(p, 'LineWidth', 1.5);  % Line width
-    addParameter(p, 'Title', '');  % Plot title
-    addParameter(p, 'XLabel', '');  % x-axis label
-    addParameter(p, 'YLabel', '');  % y-axis label
-    addParameter(p, 'Legend', {});  % Legend
-    addParameter(p, 'ShowFigure', true);  % Whether to show the plot window
-    addParameter(p, 'SaveAs', '');  % Save the plot as an image file
-    addParameter(p, 'SilentSave', false); % Whether to suppress the saving message
-    parse(p, x, varargin{:});
+    addRequired(p, 'y');  % y data
+    addParameter(p, 'LineWidth', 1.5, @(v) isnumeric(v) && isscalar(v) && v > 0);  % Line width
+    addParameter(p, 'Title', '', @ischar);  % Plot title
+    addParameter(p, 'XLabel', '', @ischar);  % x-axis label
+    addParameter(p, 'YLabel', '', @ischar);  % y-axis label
+    addParameter(p, 'Legend', {}, @(v) iscell(v) && (isempty(v) || all(cellfun(@ischar, v))));  % Legend
+    addParameter(p, 'ShowFigure', true, @(v) islogical(v) && isscalar(v));  % Whether to show the plot window
+    addParameter(p, 'SaveAs', '', @ischar);  % Save the plot as an image file
+    addParameter(p, 'SilentSave', false, @(v) islogical(v) && isscalar(v)); % Whether to suppress the saving message
+    parse(p, x, y, varargin{:});
 
-    % Extract values from the parsed parameters
-    y_data = p.Results.y;
     LineWidth = p.Results.LineWidth;
     TitleStr = p.Results.Title;
     XLabelStr = p.Results.XLabel;
@@ -40,20 +51,36 @@ function handles = easy_plot(x, varargin)
     SaveAsFile = p.Results.SaveAs;
     SilentSave = p.Results.SilentSave;
 
-    % Convert x and y to cell arrays if they are not already
-    if ~iscell(y_data)
-        y_data = {y_data};
+    assert(isnumeric(x) || iscell(x), 'x must be a numeric array or a cell array of numeric arrays.');
+    if iscell(x)
+        assert(all(cellfun(@isnumeric, x)), 'All elements of x must be numeric arrays.');
     end
-    numCurves = length(y_data);  % Number of curves to plot
 
-    if ~iscell(x)  % If x is a single array, replicate it for each y
+    assert(isnumeric(y) || iscell(y), 'y must be a numeric array or a cell array of numeric arrays.');
+    if iscell(y)
+        assert(all(cellfun(@isnumeric, y)), 'All elements of y must be numeric arrays.');
+    end
+
+    % Convert x and y to cell arrays if they are not already
+    if ~iscell(y)
+        y = {y};
+    end
+    numCurves = length(y);  % Number of curves to plot
+
+    if ~iscell(x)
+        % If x is a single array, replicate it for each y
         x = repmat({x}, 1, numCurves);
     end
 
-    % Automatically assign colors, line styles, and markers
-    defaultColors = lines(numCurves);  % Default MATLAB colors
-    lineStyles = {'-', '--', ':', '-.'};  % Line styles
-    markers = {'o', 's', 'd', 'p', 'h', '^', 'v', '<', '>'};  % Marker styles
+    % Ensure that each x{i} and y{i} have the same length
+    for i = 1:numCurves
+        assert(length(x{i}) == length(y{i}), 'Each x{i} and y{i} must have the same length.');
+    end
+
+    % Validate legend input
+    if ~isempty(LegendStr)
+        assert(length(LegendStr) == numCurves, 'Legend entries must match the number of curves.');
+    end
 
     % Create the figure window, show or hide based on the 'ShowFigure' flag
     if ShowFigure
@@ -64,9 +91,14 @@ function handles = easy_plot(x, varargin)
     hold on;
     handles = gobjects(1, numCurves);  % Pre-allocate handles array
 
+    % Automatically assign colors, line styles, and markers
+    defaultColors = lines(numCurves);
+    lineStyles = {'-', '--', ':', '-.'};
+    markers = {'o', 's', 'd', 'p', 'h', '^', 'v', '<', '>'};
+
     for i = 1:numCurves
         xi = x{i};
-        yi = y_data{i};
+        yi = y{i};
         plotColor = defaultColors(i, :);  % Assign color
         autoLineStyle = lineStyles{mod(i-1, length(lineStyles)) + 1};  % Assign line style
         autoMarker = markers{mod(i-1, length(markers)) + 1};  % Assign marker style
