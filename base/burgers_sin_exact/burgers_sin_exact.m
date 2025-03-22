@@ -12,14 +12,11 @@ function u = burgers_sin_exact(x, t, alpha, beta)
     % Returns:
     %   u - Solution of Burgers' equation at (x, t). size(u) == size(x)
 
-    arguments
-        x (:,:) double
-        t (1,1) double {mustBeNonnegative}
-        alpha (1,1) double
-        beta (1,1) double
-    end
+    assert(isnumeric(x), 'x must be a numeric array.');
+    assert(isnumeric(t) && isscalar(t) && t >= 0, 't must be a non-negative scalar.');
+    assert(isnumeric(alpha) && isscalar(alpha), 'alpha must be a scalar numeric value.');
+    assert(isnumeric(beta) && isscalar(beta), 'beta must be a scalar numeric value.');
 
-    % Compute the solution using the Newton iteration method
     u = alpha + beta * burgers_sin_newton(x - alpha * t, beta * t);
 end
 
@@ -30,7 +27,8 @@ function u = burgers_sin_newton(x, t)
 
     x = mod(x + pi, 2 * pi) - pi;
 
-    % For t >= Tb, the algorithm becomes highly sensitive to the choice of the initial value for iteration.
+    % For t >= Tb, the algorithm becomes highly sensitive
+    % to the choice of the initial value for iteration.
     u = x / (pi / 2 + t);
 
     % Newton iteration
