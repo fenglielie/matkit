@@ -30,7 +30,7 @@ function result = order(xlist, ylist)
         result(w) = -log(ylist(w + 1) / ylist(w)) / log(xlist(w + 1) / xlist(w));
     end
 
-    if size(xlist,1) == 1
+    if size(xlist, 1) == 1
         result = result';
     end
 end

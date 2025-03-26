@@ -128,7 +128,7 @@ classdef Logger < handle
             if obj.level > Logger.WARN, return; end
             obj.log(Logger.WARN, fmt, varargin{:});
 
-            builtin('warning',fmt, varargin{:});
+            builtin('warning', fmt, varargin{:});
         end
 
         function error(obj, fmt, varargin)
@@ -144,7 +144,7 @@ classdef Logger < handle
             if obj.level > Logger.ERROR, return; end
             obj.log(Logger.ERROR, fmt, varargin{:});
 
-            builtin('error',fmt, varargin{:});
+            builtin('error', fmt, varargin{:});
         end
 
         function delete(obj)
