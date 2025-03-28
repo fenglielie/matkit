@@ -4,7 +4,7 @@ close all;
 
 cd(fileparts(mfilename('fullpath')));
 
-Logger.set_global_level(Logger.DEBUG)
+Logger.set_global_level_debug();
 
 logger1 = Logger(level = Logger.DEBUG, format = 'level');
 
@@ -20,11 +20,14 @@ logger2.info('hello');
 logger2.debug('hello');
 logger2.close_file();
 
-Logger.set_global_level(Logger.INFO)
+Logger.set_global_level_info();
 
-logger3 = Logger(level = Logger.DEBUG);
+logger3 = Logger().set_format('timestamp_and_level').set_level(Logger.DEBUG);
 logger3.debug('this will not be logged!');
 logger3.info('this will be logged');
 
-logger3.set_global_level(Logger.DEBUG); % call by instance
+logger3.set_global_level_debug(); % call by instance
 logger3.debug('this will be logged now');
+
+logger3.set_format('none');
+logger3.debug('this will be logged without timestamp and level');

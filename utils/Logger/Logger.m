@@ -1,24 +1,35 @@
 classdef Logger < handle
-    % LOGGER Custom logging class for MATLAB
+    % LOGGER Custom logging class for MATLAB (handle class)
     %
     % Logger Properties:
-    %   level               - Minimum log level to record (default: INFO)
-    %   fileID              - File handle for logging (-1 indicates no file output)
-    %   format              - Log message format: 'none', 'level', 'timestamp_and_level'
+    %   level                       - Minimum log level to record (default: INFO)
+    %   fileID                      - File handle for logging (-1 indicates no file output)
+    %   format                      - Log message format: 'none', 'level', 'timestamp_and_level'
     %
     % Logger Methods:
-    %   Logger              - Constructor
-    %   open_file_append    - Open a log file (append)
-    %   open_file_trunc     - Open a log file (truncate)
-    %   close_file          - Close the log file
-    %   debug               - Log a debug message only if global level == obj.level == DEBUG
-    %   info                - Log an info message if INFO >= max(global_level, obj.level)
-    %   warn                - Log a warning message if WARN >= max(global_level, obj.level)
-    %   warn_plus           - Log a warning message and call (builtin) warning if WARN >= max(global_level, obj.level)
-    %   error               - Log an error message
-    %   error_plus          - Log an error message and call (builtin) error
-    %   set_global_level    - Set the global log level (default: INFO).
-    %   get_global_level    - Get the global log level (default: INFO).
+    %  (1) Constructor and Controls over logger (return obj)
+    %       Logger                      - Logger constructor (Key-Value Parameters: level, format)
+    %       set_level                   - Set the log level (default: Logger.INFO)
+    %       set_format                  - Set the log format (default: 'level')
+    %       open_file_append            - Open a log file (append)
+    %       open_file_trunc             - Open a log file (truncate)
+    %       close_file                  - Close the log file
+    %
+    %  (2) Logging Methods
+    %       debug                       - Log a debug message only if global level == obj.level == DEBUG
+    %       info                        - Log an info message if INFO >= max(global_level, obj.level)
+    %       warn                        - Log a warning message if WARN >= max(global_level, obj.level)
+    %       warn_plus                   - Log a warning message and call (builtin) warning if WARN >= max(global_level, obj.level)
+    %       error                       - Log an error message
+    %       error_plus                  - Log an error message and call (builtin) error
+    %
+    %   (3) About global log level
+    %       get_global_level            - Get the global log level
+    %       set_global_level_debug      - Set global log level to DEBUG
+    %       set_global_level_info       - Set global log level to INFO
+    %       set_global_level_warn       - Set global log level to WARN
+    %       set_global_level_error      - Set global log level to ERROR
+    %       reset_global_level          - Reset global log level to default (default: INFO)
     %
     % NOTE:
     %   Supported log levels: DEBUG < INFO < WARN < ERROR.
@@ -26,9 +37,9 @@ classdef Logger < handle
     %   Error messages are always logged.
     %
     % EXAMPLE:
-    %   Logger.set_global_level(Logger.DEBUG);
+    %   Logger.set_global_level_debug();
     %
-    %   logger = Logger(level=Logger.DEBUG, format='none');
+    %   logger = Logger(level = Logger.DEBUG, format = 'none');
     %   logger.open_file_trunc('app.log');
     %   logger.debug('Processing item %d of %d...', 5, 100);
     %   logger.info('User %s has logged in', 'Alice');
@@ -54,14 +65,20 @@ classdef Logger < handle
     methods
 
         function obj = Logger(varargin)
-            % Logger Constructor
+            % Logger constructor
             %
             % Key-Value Parameters:
             %   level  - Minimum log level: DEBUG < INFO < WARN < ERROR. (default: Logger.INFO)
             %   format - Log format: 'none', 'level', 'timestamp_and_level'. (default: 'level')
+            %
+            % EXAMPLE:
+            %   logger1 = Logger();
+            %   logger2 = Logger(level = Logger.DEBUG, format = 'none');
 
+            validLevels = [Logger.DEBUG, Logger.INFO, Logger.WARN, Logger.ERROR];
             p = inputParser;
-            addParameter(p, 'level', Logger.INFO, @(x) isnumeric(x) && isscalar(x));
+            addParameter(p, 'level', Logger.INFO, ...
+                @(x) isnumeric(x) && isscalar(x) && ismember(x, validLevels));
             addParameter(p, 'format', 'level', @(x) ismember(x, {'none', 'level', 'timestamp_and_level'}));
             parse(p, varargin{:});
 
@@ -69,7 +86,41 @@ classdef Logger < handle
             obj.format = p.Results.format;
         end
 
-        function open_file_append(obj, fileName)
+        function obj = set_level(obj, level)
+            % Set the log level.
+            % Supported log levels: DEBUG < INFO < WARN < ERROR. (default: Logger.INFO)
+            %
+            % EXAMPLE:
+            %   obj = Logger();
+            %   obj.set_level(Logger.DEBUG);
+
+            validLevels = [Logger.DEBUG, Logger.INFO, Logger.WARN, Logger.ERROR];
+
+            if ~(isnumeric(level) && isscalar(level) && ismember(level, validLevels))
+                error('Logger:InvalidLevel', 'Invalid log level. Supported log levels: DEBUG < INFO < WARN < ERROR.');
+            end
+
+            obj.level = level;
+        end
+
+        function obj = set_format(obj, format)
+            % Set the log format.
+            % Supported log formats: 'none', 'level', 'timestamp_and_level'. (default: 'level')
+            %
+            % EXAMPLE:
+            %   obj = Logger();
+            %   obj.set_format('timestamp_and_level');
+
+            validFormats = {'none', 'level', 'timestamp_and_level'};
+
+            if ~ismember(format, validFormats)
+                error('Logger:InvalidFormat', 'Invalid log format. Supported log formats: ''none'', ''level'', ''timestamp_and_level''.');
+            end
+
+            obj.format = format;
+        end
+
+        function obj = open_file_append(obj, fileName)
             % Open a log file (append)
 
             obj.close_file();
@@ -86,7 +137,7 @@ classdef Logger < handle
                 Logger.get_level_str(Logger.get_global_level()));
         end
 
-        function open_file_trunc(obj, fileName)
+        function obj = open_file_trunc(obj, fileName)
             % Open a log file (truncate)
 
             obj.close_file();
@@ -103,7 +154,7 @@ classdef Logger < handle
                 Logger.get_level_str(Logger.get_global_level()));
         end
 
-        function close_file(obj)
+        function obj = close_file(obj)
             % Close the log file
 
             if obj.fileID == -1, return; end
@@ -209,10 +260,13 @@ classdef Logger < handle
     methods (Static)
 
         function ts = get_timestamp()
+            % Get the current timestamp. (2025-01-02 08:00:00.000)
+
             ts = datetime('now', 'Format', 'yyyy-MM-dd HH:mm:ss.SSS');
         end
 
         function str = get_level_str(level)
+            % Get the string representation of a log level.
 
             switch level
                 case Logger.DEBUG, str = 'DEBUG';
@@ -224,16 +278,35 @@ classdef Logger < handle
 
         end
 
-        function set_global_level(level)
-            % Set the global log level (default: INFO).
-
-            Logger.global_level_accessor(level);
+        function level = get_global_level()
+            % Get the global log level.
+            level = Logger.global_level_accessor();
         end
 
-        function level = get_global_level()
-            % Get the global log level (default: INFO).
+        function set_global_level_debug()
+            % Set global log level to DEBUG
 
-            level = Logger.global_level_accessor();
+            Logger.global_level_accessor(Logger.DEBUG);
+        end
+
+        function set_global_level_info()
+            % Set global log level to INFO
+            Logger.global_level_accessor(Logger.INFO);
+        end
+
+        function set_global_level_warn()
+            % Set global log level to WARN
+            Logger.global_level_accessor(Logger.WARN);
+        end
+
+        function set_global_level_error()
+            % Set global log level to ERROR
+            Logger.global_level_accessor(Logger.ERROR);
+        end
+
+        function reset_global_level()
+            % Reset global log level to default (default: INFO)
+            Logger.global_level_accessor(Logger.INFO);
         end
 
     end
