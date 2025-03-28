@@ -11,16 +11,23 @@ classdef Logger < handle
     %   open_file_append    - Open a log file (append)
     %   open_file_trunc     - Open a log file (truncate)
     %   close_file          - Close the log file
-    %   debug               - Log a debug message if obj.level >= DEBUG
-    %   info                - Log an info message if obj.level >= INFO
-    %   warn                - Log a warning message if obj.level >= WARN
-    %   warn_plus           - Log a warning message and call (builtin) warning if obj.level >= WARN
-    %   error               - Log an error message if obj.level >= ERROR
-    %   error_plus          - Log an error message and call (builtin) error if obj.level >= ERROR
+    %   debug               - Log a debug message only if global level == obj.level == DEBUG
+    %   info                - Log an info message if INFO >= max(global_level, obj.level)
+    %   warn                - Log a warning message if WARN >= max(global_level, obj.level)
+    %   warn_plus           - Log a warning message and call (builtin) warning if WARN >= max(global_level, obj.level)
+    %   error               - Log an error message
+    %   error_plus          - Log an error message and call (builtin) error
+    %   set_global_level    - Set the global log level (default: INFO).
+    %   get_global_level    - Get the global log level (default: INFO).
     %
-    % Supported log levels: DEBUG < INFO < WARN < ERROR
+    % NOTE:
+    %   Supported log levels: DEBUG < INFO < WARN < ERROR.
+    %   Debug messages are logged only if global level == obj.level == DEBUG.
+    %   Error messages are always logged.
     %
     % EXAMPLE:
+    %   Logger.set_global_level(Logger.DEBUG);
+    %
     %   logger = Logger(level=Logger.DEBUG, format='none');
     %   logger.open_file_trunc('app.log');
     %   logger.debug('Processing item %d of %d...', 5, 100);
@@ -74,8 +81,9 @@ classdef Logger < handle
             end
 
             obj.fileID = fid;
-            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (level: %s)\n', ...
-                obj.get_timestamp(), obj.get_level_str(obj.level));
+            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (obj.level: %s) (global_level: %s)\n', ...
+                Logger.get_timestamp(), Logger.get_level_str(obj.level), ...
+                Logger.get_level_str(Logger.get_global_level()));
         end
 
         function open_file_trunc(obj, fileName)
@@ -90,8 +98,9 @@ classdef Logger < handle
             end
 
             obj.fileID = fid;
-            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (level: %s)\n', ...
-                obj.get_timestamp(), obj.get_level_str(obj.level));
+            fprintf(obj.fileID, '[%s] LOG FILE INITIALIZED (obj.level: %s) (global_level: %s)\n', ...
+                Logger.get_timestamp(), Logger.get_level_str(obj.level), ...
+                Logger.get_level_str(Logger.get_global_level()));
         end
 
         function close_file(obj)
@@ -99,52 +108,57 @@ classdef Logger < handle
 
             if obj.fileID == -1, return; end
 
-            fprintf(obj.fileID, '[%s] LOG FILE CLOSED\n', obj.get_timestamp());
+            fprintf(obj.fileID, '[%s] LOG FILE CLOSED\n', Logger.get_timestamp());
             fclose(obj.fileID);
             obj.fileID = -1;
         end
 
         function debug(obj, fmt, varargin)
-            % Log a debug message if obj.level >= DEBUG
+            % Log a debug message only if global level == obj.level == DEBUG
 
-            if obj.level > Logger.DEBUG, return; end
-            obj.log(Logger.DEBUG, fmt, varargin{:});
+            if Logger.DEBUG == max(Logger.get_global_level(), obj.level)
+                obj.log(Logger.DEBUG, fmt, varargin{:});
+            end
+
         end
 
         function info(obj, fmt, varargin)
-            % Log a info message if obj.level >= INFO
+            % Log an info message if INFO >= max(global_level, obj.level)
 
-            if obj.level > Logger.INFO, return; end
-            obj.log(Logger.INFO, fmt, varargin{:});
+            if Logger.INFO >= max(Logger.get_global_level(), obj.level)
+                obj.log(Logger.INFO, fmt, varargin{:});
+            end
+
         end
 
         function warn(obj, fmt, varargin)
-            % Log a warn message if obj.level >= WARN
+            % Log a warning message if WARN >= max(global_level, obj.level)
 
-            if obj.level > Logger.WARN, return; end
-            obj.log(Logger.WARN, fmt, varargin{:});
+            if Logger.WARN >= max(Logger.get_global_level(), obj.level)
+                obj.log(Logger.WARN, fmt, varargin{:});
+            end
+
         end
 
         function warn_plus(obj, fmt, varargin)
-            % Log a warning message and call (builtin) warning if obj.level >= WARN
+            % Log a warning message and call (builtin) warning if WARN >= max(global_level, obj.level)
 
-            if obj.level > Logger.WARN, return; end
-            obj.log(Logger.WARN, fmt, varargin{:});
+            if Logger.WARN >= max(Logger.get_global_level(), obj.level)
+                obj.log(Logger.WARN, fmt, varargin{:});
+                builtin('warning', fmt, varargin{:});
+            end
 
-            builtin('warning', fmt, varargin{:});
         end
 
         function error(obj, fmt, varargin)
-            % Log an error message if obj.level >= ERROR
+            % Log an error message
 
-            if obj.level > Logger.ERROR, return; end
             obj.log(Logger.ERROR, fmt, varargin{:});
         end
 
         function error_plus(obj, fmt, varargin)
-            % Log an error message and call (builtin) error if obj.level >= ERROR
+            % Log an error message and call (builtin) error
 
-            if obj.level > Logger.ERROR, return; end
             obj.log(Logger.ERROR, fmt, varargin{:});
 
             builtin('error', fmt, varargin{:});
@@ -177,7 +191,7 @@ classdef Logger < handle
         end
 
         function str = format_log(obj, level, msg)
-            levelStr = obj.get_level_str(level);
+            levelStr = Logger.get_level_str(level);
 
             switch obj.format
                 case 'none'
@@ -185,16 +199,20 @@ classdef Logger < handle
                 case 'level'
                     str = sprintf('[%s] %s\n', levelStr, msg);
                 case 'timestamp_and_level'
-                    str = sprintf('[%s] [%s] %s\n', obj.get_timestamp(), levelStr, msg);
+                    str = sprintf('[%s] [%s] %s\n', Logger.get_timestamp(), levelStr, msg);
             end
 
         end
 
-        function ts = get_timestamp(~)
+    end
+
+    methods (Static)
+
+        function ts = get_timestamp()
             ts = datetime('now', 'Format', 'yyyy-MM-dd HH:mm:ss.SSS');
         end
 
-        function str = get_level_str(~, level)
+        function str = get_level_str(level)
 
             switch level
                 case Logger.DEBUG, str = 'DEBUG';
@@ -204,6 +222,36 @@ classdef Logger < handle
                 otherwise , str = 'UNKNOWN';
             end
 
+        end
+
+        function set_global_level(level)
+            % Set the global log level (default: INFO).
+
+            Logger.global_level_accessor(level);
+        end
+
+        function level = get_global_level()
+            % Get the global log level (default: INFO).
+
+            level = Logger.global_level_accessor();
+        end
+
+    end
+
+    methods (Static, Access = private)
+
+        function level = global_level_accessor(newLevel)
+            persistent global_level
+
+            if isempty(global_level)
+                global_level = Logger.INFO;
+            end
+
+            if nargin > 0
+                global_level = newLevel;
+            end
+
+            level = global_level;
         end
 
     end
