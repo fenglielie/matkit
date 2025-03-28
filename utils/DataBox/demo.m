@@ -7,14 +7,12 @@ db.data.beta = 5;
 
 db.require('alpha', 'alpha is a required field.');
 db.conditionally_require('beta', @(x) x > 3, 'beta must be greater than 3 if provided.');
-db.check('beta');   % pass
-db.check_all();     % pass
+db.check('beta'); % pass
+db.check_all(); % pass
 
 db.enforce('gamma', @(x) x > 0, 'gamma must exist and be greater than 0.');
 db.data.gamma = 2;
-db.check_all();     % This will throw an error because 'gamma' is missing
-
-
+db.check_all(); % This will throw an error because 'gamma' is missing
 
 %% Example 2
 

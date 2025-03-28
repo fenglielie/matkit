@@ -11,6 +11,7 @@ classdef MatLagrangeDx < MatBase
     %   du = basis.eval(x);
 
     methods
+
         function obj = MatLagrangeDx(x_points)
             % Constructor for MatLagrangeDx
             %
@@ -32,9 +33,11 @@ classdef MatLagrangeDx < MatBase
             % Call parent constructor
             obj@MatBase(funcs);
         end
+
     end
 
-    methods(Static)
+    methods (Static)
+
         function funcs = generateLagrangeFuncsDerivative(x_points)
             % Generate the derivatives of the Lagrange polynomial functions based on the given points
             %
@@ -53,14 +56,16 @@ classdef MatLagrangeDx < MatBase
 
                 L_prime = @(x) 0;
 
-                for k=1:n
+                for k = 1:n
+
                     if k == i
                         continue
                     end
 
                     term = @(x) 1;
 
-                    for j=1:n
+                    for j = 1:n
+
                         if j == k || j == i
                             continue
                         end
@@ -72,13 +77,20 @@ classdef MatLagrangeDx < MatBase
                 end
 
                 c0 = 1;
+
                 for j = 1:n
+
                     if j ~= i
                         c0 = c0 * (x_points(i) - x_points(j));
                     end
+
                 end
+
                 funcs{i} = @(x) L_prime(x) / c0; % Store derivative function handle
             end
+
         end
+
     end
+
 end

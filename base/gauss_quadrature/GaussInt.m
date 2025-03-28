@@ -11,7 +11,8 @@ classdef GaussInt
     %
     % All methods take a function handle f(x) and integrate it over [xleft, xright].
 
-    methods(Static)
+    methods (Static)
+
         function result = gauss3(f, xleft, xright)
             % GAUSS3 3-point Gauss-Legendre quadrature for numerical integration.
             %
@@ -25,7 +26,7 @@ classdef GaussInt
 
             assert(isa(f, 'function_handle'), 'f must be a function handle.');
             assert(isnumeric(xleft) && isnumeric(xright) && xleft < xright, ...
-                'xleft must be less than xright and both must be numeric.');
+            'xleft must be less than xright and both must be numeric.');
 
             % Gauss-Legendre 3-point nodes and weights
             weights = [5/9, 8/9, 5/9]';
@@ -52,13 +53,13 @@ classdef GaussInt
 
             assert(isa(f, 'function_handle'), 'f must be a function handle.');
             assert(isnumeric(xleft) && isnumeric(xright) && xleft < xright, ...
-                'xleft must be less than xright and both must be numeric.');
+            'xleft must be less than xright and both must be numeric.');
 
             % Gauss-Legendre 5-point nodes and weights
             weights = [0.2369268850561891, 0.4786286704993665, 0.5688888888888889, ...
-                       0.4786286704993665, 0.2369268850561891]';
+                           0.4786286704993665, 0.2369268850561891]';
             nodes = [-0.9061798459386640, -0.5384693101056831, 0, ...
-                      0.5384693101056831, 0.9061798459386640]';
+                         0.5384693101056831, 0.9061798459386640]';
 
             % [-1, 1] <-> [xleft, xright]
             half_width = (xright - xleft) / 2;
@@ -83,7 +84,7 @@ classdef GaussInt
             assert(isa(f, 'function_handle'), 'f must be a function handle.');
             assert(isnumeric(n) && isscalar(n) && n >= 2 && mod(n, 1) == 0, 'n must be a positive integer, n >= 2');
             assert(isnumeric(xleft) && isnumeric(xright) && xleft < xright, ...
-                'xleft must be less than xright and both must be numeric.');
+            'xleft must be less than xright and both must be numeric.');
 
             % Gauss-Legendre n-point nodes and weights
             [nodes, weights] = gauss_legendre(n);
@@ -95,5 +96,7 @@ classdef GaussInt
 
             result = half_width * sum(weights .* f(nodes_local));
         end
+
     end
+
 end

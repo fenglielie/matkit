@@ -39,6 +39,7 @@ function [fig, ax] = euler_riemann_exact_plot( ...
     if nargin < 10 || isempty(x_c)
         x_c = 0.0;
     end
+
     assert(isnumeric(x_c) && isscalar(x_c), 'x_c must be a scalar.');
 
     xlist = linspace(x_l, x_r, 1000);
@@ -48,12 +49,13 @@ function [fig, ax] = euler_riemann_exact_plot( ...
         rho_l, u_l, p_l, rho_r, u_r, p_r, gamma, xlist, x_c, t);
 
     % Compute internal energy
-    e = 1/(gamma-1) * p ./ rho;
+    e = 1 / (gamma - 1) * p ./ rho;
 
     primitive = {rho, u, p, e};
     names = {'Density', 'Velocity', 'Pressure', 'Internal Energy'};
 
     fig = figure;
+
     for w = 1:4
         subplot(2, 2, w);
         q = primitive{w};

@@ -35,21 +35,25 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     if nargin < 7 || isempty(gamma)
         gamma = 1.4;
     end
+
     assert(gamma > 1, 'gamma must be greater than 1.');
 
     if nargin < 8 || isempty(xlist)
         xlist = linspace(-1.0, 1.0, 1000);
     end
+
     assert(isvector(xlist), 'xlist must be a vector.');
 
     if nargin < 9 || isempty(x_c)
         x_c = 0.0;
     end
+
     assert(isnumeric(x_c) && isscalar(x_c), 'x_c must be a scalar.');
 
     if nargin < 10 || isempty(t)
         t = 0.8 * max(abs(xlist - x_c)) / max(abs([u_l, u_r]));
     end
+
     assert(t >= 0, 't must be non-negative.');
 
     % Compute the sound speeds in the left and right states
@@ -84,7 +88,7 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     func = @(p) phi_l(p) - phi_r(p);
 
     % Initial guess for pressure in the middle state
-    p0_PV = (p_l + p_r) / 2.0 - 1 / 8 * (u_r - u_l) * (rho_l + rho_r) * (c_l + c_r);
+    p0_PV = (p_l + p_r) / 2.0 -1/8 * (u_r - u_l) * (rho_l + rho_r) * (c_l + c_r);
     p0 = max(p0_PV, 1e-8);
 
     % Solve for the intersection point to get the intermediate state p and u
@@ -101,15 +105,15 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     % Compute the density on the left and right side of the contact discontinuity
 
     if p_s <= p_l
-        rho_s_l = (p_s / p_l) ^ (1.0 / gamma) * rho_l;  % Rarefaction wave
+        rho_s_l = (p_s / p_l) ^ (1.0 / gamma) * rho_l; % Rarefaction wave
     else
-        rho_s_l = ((1.0 + alpha * p_s / p_l) / ((p_s / p_l) + alpha)) * rho_l;  % Shock wave
+        rho_s_l = ((1.0 + alpha * p_s / p_l) / ((p_s / p_l) + alpha)) * rho_l; % Shock wave
     end
 
     if p_s <= p_r
-        rho_s_r = (p_s / p_r) ^ (1.0 / gamma) * rho_r;  % Rarefaction wave
+        rho_s_r = (p_s / p_r) ^ (1.0 / gamma) * rho_r; % Rarefaction wave
     else
-        rho_s_r = ((1.0 + alpha * p_s / p_r) / ((p_s / p_r) + alpha)) * rho_r;  % Shock wave
+        rho_s_r = ((1.0 + alpha * p_s / p_r) / ((p_s / p_r) + alpha)) * rho_r; % Shock wave
     end
 
     % Compute sound speed in the intermediate state
@@ -119,10 +123,10 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     % Compute wave speeds
 
     % 1-wave
-    if p_s > p_l  % Shock wave
+    if p_s > p_l % Shock wave
         w_1_l = (rho_l * u_l - rho_s_l * u_s) / (rho_l - rho_s_l);
         w_1_r = w_1_l;
-    else  % Rarefaction wave
+    else % Rarefaction wave
         w_1_l = u_l - c_l;
         w_1_r = u_s - c_s_l;
     end
@@ -131,10 +135,10 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     w_2 = u_s;
 
     % 3-wave
-    if p_s > p_r  % Shock wave
+    if p_s > p_r % Shock wave
         w_3_l = (rho_r * u_r - rho_s_r * u_s) / (rho_r - rho_s_r);
         w_3_r = w_3_l;
-    else  % Rarefaction wave
+    else % Rarefaction wave
         w_3_l = u_s + c_s_r;
         w_3_r = u_r + c_r;
     end
@@ -160,31 +164,33 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     p_out = zeros(size(xlist));
 
     for i = 1:length(xi)
-        if xi(i) <= w_1_l  % Left of the 1-wave
+
+        if xi(i) <= w_1_l % Left of the 1-wave
             rho_out(i) = rho_l;
             u_out(i) = u_l;
             p_out(i) = p_l;
-        elseif xi(i) <= w_1_r  % Inside the 1-wave (if it's a rarefaction wave)
+        elseif xi(i) <= w_1_r % Inside the 1-wave (if it's a rarefaction wave)
             rho_out(i) = rho_1_fan(i);
             u_out(i) = u_1_fan(i);
             p_out(i) = p_1_fan(i);
-        elseif xi(i) <= w_2  % Between the 1-wave and the 2-wave
+        elseif xi(i) <= w_2 % Between the 1-wave and the 2-wave
             rho_out(i) = rho_s_l;
             u_out(i) = u_s;
             p_out(i) = p_s;
-        elseif xi(i) <= w_3_l  % Between the 2-wave and the 3-wave
+        elseif xi(i) <= w_3_l % Between the 2-wave and the 3-wave
             rho_out(i) = rho_s_r;
             u_out(i) = u_s;
             p_out(i) = p_s;
-        elseif xi(i) <= w_3_r  % Inside the 3-wave (if it's a rarefaction wave)
+        elseif xi(i) <= w_3_r % Inside the 3-wave (if it's a rarefaction wave)
             rho_out(i) = rho_3_fan(i);
             u_out(i) = u_3_fan(i);
             p_out(i) = p_3_fan(i);
-        else  % Right of the 3-wave
+        else % Right of the 3-wave
             rho_out(i) = rho_r;
             u_out(i) = u_r;
             p_out(i) = p_r;
         end
+
     end
 
     % Additional info

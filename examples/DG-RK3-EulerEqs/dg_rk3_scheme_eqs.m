@@ -31,17 +31,17 @@ function u = dg_rk3_scheme_eqs(u, dx, tend, f, fhat, get_alpha, pk, gk, basis, b
     assert(isnumeric(dim) && isscalar(dim) && dim > 0 && mod(dim, 1) == 0, 'dim must be a positive integer.');
     assert(islogical(is_riemann) && isscalar(is_riemann), 'is_riemann must be a logical scalar (true or false).');
 
-    assert(2*gk >= basis.funcs_num, 'insufficient precision of numerical quadrature formula');
+    assert(2 * gk >= basis.funcs_num, 'insufficient precision of numerical quadrature formula');
     [points, weights] = gauss_legendre(gk);
 
-    M = basis.eval(points, pk+1); % size = [gk, pk+1]
+    M = basis.eval(points, pk + 1); % size = [gk, pk+1]
     W = diag(weights); % size = [gk, gk]
-    InvMass = inv(dx/2 * M' * W * M); % size = [pk+1, pk+1]
-    DM = 2/dx * basis_dx.eval(points, pk+1); % size = [gk, pk+1]
+    InvMass = inv(dx / 2 * M' * W * M); % size = [pk+1, pk+1]
+    DM = 2 / dx * basis_dx.eval(points, pk + 1); % size = [gk, pk+1]
 
-    vl = basis.eval(-1, pk+1); % column vector size = [pk+1, 1]
-    vc = basis.eval(0, pk+1);
-    vr = basis.eval(1, pk+1);
+    vl = basis.eval(-1, pk + 1); % column vector size = [pk+1, 1]
+    vc = basis.eval(0, pk + 1);
+    vr = basis.eval(1, pk + 1);
 
     params = struct();
     params.vl = vl;
@@ -60,24 +60,24 @@ function u = dg_rk3_scheme_eqs(u, dx, tend, f, fhat, get_alpha, pk, gk, basis, b
     params.is_riemann = is_riemann;
 
     tnow = 0;
-    while tnow < tend - 1e-10
-        uh_mid = params.vcd'*u; % size(u) = [d*(pk+1), n], size(uh_mid) = [d, n]
+
+    while tnow < tend
+        uh_mid = params.vcd' * u; % size(u) = [d*(pk+1), n], size(uh_mid) = [d, n]
         alpha = get_alpha(uh_mid);
         global_alpha = max(alpha);
 
-        dt = 1/((2*pk+3)*global_alpha)*dx^(max((pk+1)/3, 1));
+        dt = 1 / ((2 * pk + 3) * global_alpha) * dx ^ (max((pk + 1) / 3, 1));
         dt = min([dt, tend - tnow]);
 
         u1 = u + dt * L_op(u, dx, f, fhat, get_alpha, params);
-        u2 = 3/4 * u + 1/4 * (u1 + dt * L_op(u1, dx, f, fhat, get_alpha, params));
-        u3 = 1/3 * u + 2/3 * (u2 + dt * L_op(u2, dx, f, fhat, get_alpha, params));
+        u2 = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, get_alpha, params));
+        u3 = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, get_alpha, params));
         u = u3;
 
         tnow = tnow + dt;
     end
 
 end
-
 
 function result = L_op(u, dx, f, fhat, get_alpha, params)
     % size(u) = [d*(pk+1), n]
@@ -95,14 +95,16 @@ function result = L_op(u, dx, f, fhat, get_alpha, params)
     fhat_r = fhat(ur, circshift(ul, -1, 2), rf_alpha);
 
     qd = params.Md * u; % size = [d*gk, n]
-    main = dx/2 * (params.DMd') * params.Wd * f(qd); % size = [d*(pk+1), n]
+    main = dx / 2 * (params.DMd') * params.Wd * f(qd); % size = [d*(pk+1), n]
 
     left_boundary_cs = cell(params.dim, 1);
     right_boundary_cs = cell(params.dim, 1);
-    for ii=1:params.dim
+
+    for ii = 1:params.dim
         left_boundary_cs{ii} = params.vl .* fhat_l(ii, :); % size(vl) = [pk+1, 1]
         right_boundary_cs{ii} = params.vr .* fhat_r(ii, :);
     end
+
     left_boundary = cell2mat(left_boundary_cs); % size = [d*(pk+1), n]
     right_boundary = cell2mat(right_boundary_cs);
 
@@ -113,4 +115,5 @@ function result = L_op(u, dx, f, fhat, get_alpha, params)
         result(:, 1) = 0;
         result(:, end) = 0;
     end
+
 end

@@ -27,18 +27,17 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
     assert(isa(basis, 'MatBase'), 'basis must be an object of class MatBase or its subclass.');
     assert(isa(basis_dx, 'MatBase'), 'basis_dx must be an object of class MatBase or its subclass.');
 
-
-    assert(2*gk >= 2*basis.funcs_num, 'insufficient precision of numerical quadrature formula');
+    assert(2 * gk >= 2 * basis.funcs_num, 'insufficient precision of numerical quadrature formula');
     [points, weights] = gauss_legendre(gk);
 
-    M = basis.eval(points, pk+1);
+    M = basis.eval(points, pk + 1);
     W = diag(weights);
-    InvMass = inv(dx/2 * M' * W * M);
-    DM = 2/dx * basis_dx.eval(points, pk+1);
+    InvMass = inv(dx / 2 * M' * W * M);
+    DM = 2 / dx * basis_dx.eval(points, pk + 1);
 
-    vl = basis.eval(-1, pk+1); % column vector
-    vc = basis.eval(0, pk+1);
-    vr = basis.eval(1, pk+1);
+    vl = basis.eval(-1, pk + 1); % column vector
+    vc = basis.eval(0, pk + 1);
+    vr = basis.eval(1, pk + 1);
 
     params = struct();
     params.M = M;
@@ -50,20 +49,21 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
     params.vr = vr;
 
     tnow = 0;
-    while tnow < tend - 1e-10
-        uh_mid = vc'*u;
-        dt = 1/((2*pk+3)*max(abs(df(uh_mid))))*dx^(max((pk+1)/3, 1));
+
+    while tnow < tend
+        uh_mid = vc' * u;
+        dt = 1 / ((2 * pk + 3) * max(abs(df(uh_mid)))) * dx ^ (max((pk + 1) / 3, 1));
         dt = min([dt, tend - tnow]);
 
         u1 = u + dt * L_op(u, dx, f, fhat, df, params);
-        u2 = 3/4 * u + 1/4 * (u1 + dt * L_op(u1, dx, f, fhat, df, params));
-        u3 = 1/3 * u + 2/3 * (u2 + dt * L_op(u2, dx, f, fhat, df, params));
+        u2 = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, df, params));
+        u3 = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, df, params));
         u = u3;
 
         tnow = tnow + dt;
     end
-end
 
+end
 
 function result = L_op(u, dx, f, fhat, df, params)
 
@@ -76,7 +76,7 @@ function result = L_op(u, dx, f, fhat, df, params)
     fhat_l = fhat(circshift(ur, 1), ul, lf_alpha);
     fhat_r = fhat(ur, circshift(ul, -1), rf_alpha);
 
-    main = dx/2 * (params.DM') * params.W * f(params.M * u);
+    main = dx / 2 * (params.DM') * params.W * f(params.M * u);
     left_boundary = params.vl * fhat_l;
     right_boundary = params.vr * fhat_r;
 

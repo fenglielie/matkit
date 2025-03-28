@@ -23,7 +23,7 @@ function [x, dx] = mesh_init_1d(xleft, xright, n)
     assert(xleft < xright, 'xleft must be less than xright.');
     assert(isnumeric(n) && isscalar(n) && n == floor(n) && n > 0, 'n must be a positive integer.');
 
-    x = linspace(xleft, xright, n+1);
-    dx = x(2)-x(1);
-    x = x(1:end-1) + dx / 2;
+    x = linspace(xleft, xright, n + 1);
+    dx = x(2) - x(1);
+    x = x(1:end - 1) + dx / 2;
 end

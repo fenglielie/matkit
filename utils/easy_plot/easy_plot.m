@@ -30,15 +30,15 @@ function handles = easy_plot(x, y, varargin)
     %       XLabel='x', YLabel='y', Legend={'sin(x)', 'cos(x)'});
 
     p = inputParser;
-    addRequired(p, 'x');  % x data
-    addRequired(p, 'y');  % y data
-    addParameter(p, 'LineWidth', 1.5, @(v) isnumeric(v) && isscalar(v) && v > 0);  % Line width
-    addParameter(p, 'Title', '', @ischar);  % Plot title
-    addParameter(p, 'XLabel', '', @ischar);  % x-axis label
-    addParameter(p, 'YLabel', '', @ischar);  % y-axis label
-    addParameter(p, 'Legend', {}, @(v) iscell(v) && (isempty(v) || all(cellfun(@ischar, v))));  % Legend
-    addParameter(p, 'ShowFigure', true, @(v) islogical(v) && isscalar(v));  % Whether to show the plot window
-    addParameter(p, 'SaveAs', '', @ischar);  % Save the plot as an image file
+    addRequired(p, 'x'); % x data
+    addRequired(p, 'y'); % y data
+    addParameter(p, 'LineWidth', 1.5, @(v) isnumeric(v) && isscalar(v) && v > 0); % Line width
+    addParameter(p, 'Title', '', @ischar); % Plot title
+    addParameter(p, 'XLabel', '', @ischar); % x-axis label
+    addParameter(p, 'YLabel', '', @ischar); % y-axis label
+    addParameter(p, 'Legend', {}, @(v) iscell(v) && (isempty(v) || all(cellfun(@ischar, v)))); % Legend
+    addParameter(p, 'ShowFigure', true, @(v) islogical(v) && isscalar(v)); % Whether to show the plot window
+    addParameter(p, 'SaveAs', '', @ischar); % Save the plot as an image file
     addParameter(p, 'SilentSave', false, @(v) islogical(v) && isscalar(v)); % Whether to suppress the saving message
     parse(p, x, y, varargin{:});
 
@@ -52,11 +52,13 @@ function handles = easy_plot(x, y, varargin)
     SilentSave = p.Results.SilentSave;
 
     assert(isnumeric(x) || iscell(x), 'x must be a numeric array or a cell array of numeric arrays.');
+
     if iscell(x)
         assert(all(cellfun(@isnumeric, x)), 'All elements of x must be numeric arrays.');
     end
 
     assert(isnumeric(y) || iscell(y), 'y must be a numeric array or a cell array of numeric arrays.');
+
     if iscell(y)
         assert(all(cellfun(@isnumeric, y)), 'All elements of y must be numeric arrays.');
     end
@@ -65,7 +67,8 @@ function handles = easy_plot(x, y, varargin)
     if ~iscell(y)
         y = {y};
     end
-    numCurves = length(y);  % Number of curves to plot
+
+    numCurves = length(y); % Number of curves to plot
 
     if ~iscell(x)
         % If x is a single array, replicate it for each y
@@ -84,12 +87,13 @@ function handles = easy_plot(x, y, varargin)
 
     % Create the figure window, show or hide based on the 'ShowFigure' flag
     if ShowFigure
-        fig = figure;  % Normal figure window
+        fig = figure; % Normal figure window
     else
-        fig = figure('Visible', 'off');  % Hidden figure window
+        fig = figure('Visible', 'off'); % Hidden figure window
     end
+
     hold on;
-    handles = gobjects(1, numCurves);  % Pre-allocate handles array
+    handles = gobjects(1, numCurves); % Pre-allocate handles array
 
     % Automatically assign colors, line styles, and markers
     defaultColors = lines(numCurves);
@@ -99,20 +103,21 @@ function handles = easy_plot(x, y, varargin)
     for i = 1:numCurves
         xi = x{i};
         yi = y{i};
-        plotColor = defaultColors(i, :);  % Assign color
-        autoLineStyle = lineStyles{mod(i-1, length(lineStyles)) + 1};  % Assign line style
-        autoMarker = markers{mod(i-1, length(markers)) + 1};  % Assign marker style
+        plotColor = defaultColors(i, :); % Assign color
+        autoLineStyle = lineStyles{mod(i - 1, length(lineStyles)) + 1}; % Assign line style
+        autoMarker = markers{mod(i - 1, length(markers)) + 1}; % Assign marker style
 
         % Automatically adjust MarkerIndices (marker spacing)
-        numMarkers = min(10, length(xi));  % Ensure at least 10 markers
-        offset = round((i-1) * length(xi) / (numCurves + 1));  % Offset each curve's markers
-        markerIdx = mod(round(linspace(1, length(xi), numMarkers)) + offset, length(xi)) + 1;  % Generate marker indices
+        numMarkers = min(10, length(xi)); % Ensure at least 10 markers
+        offset = round((i - 1) * length(xi) / (numCurves + 1)); % Offset each curve's markers
+        markerIdx = mod(round(linspace(1, length(xi), numMarkers)) + offset, length(xi)) + 1; % Generate marker indices
 
         % Plot the curve
         handles(i) = plot(xi, yi, 'LineWidth', LineWidth, ...
             'LineStyle', autoLineStyle, 'Marker', autoMarker, ...
             'MarkerIndices', markerIdx, 'Color', plotColor);
     end
+
     hold off;
 
     % Set title and axis labels if provided
@@ -130,20 +135,23 @@ function handles = easy_plot(x, y, varargin)
 
     % Automatically save the plot if 'SaveAs' is specified
     if ~isempty(SaveAsFile)
-        [~, ~, ext] = fileparts(SaveAsFile);  % Get file extension
+        [~, ~, ext] = fileparts(SaveAsFile); % Get file extension
+
         switch lower(ext)
             case '.fig'
-                savefig(fig, SaveAsFile);  % Save as .fig file
+                savefig(fig, SaveAsFile); % Save as .fig file
             case {'.png', '.jpg', '.jpeg', '.tif', '.tiff', '.bmp'}
-                saveas(fig, SaveAsFile);  % Save as image file
+                saveas(fig, SaveAsFile); % Save as image file
             case {'.pdf', '.eps', '.svg'}
-                print(fig, SaveAsFile, ['-d', ext(2:end)], '-r300');  % Save as vector format
+                print(fig, SaveAsFile, ['-d', ext(2:end)], '-r300'); % Save as vector format
             otherwise
-                warning('Unsupported file format: %s', ext);  % Warning for unsupported formats
+                warning('Unsupported file format: %s', ext); % Warning for unsupported formats
         end
 
         if ~SilentSave
             fprintf('Figure saved as: %s\n', SaveAsFile);
         end
+
     end
+
 end

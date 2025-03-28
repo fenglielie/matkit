@@ -11,7 +11,7 @@ function testConstructor(testCase)
 
     verifyClass(testCase, basis, 'MatLegendreDx');
     verifyEqual(testCase, basis.funcs_num, n, ...
-        'Incorrect number of basis functions stored.');
+    'Incorrect number of basis functions stored.');
 end
 
 %% Test Evaluation of Legendre Polynomial Derivatives
@@ -24,12 +24,12 @@ function testEvalFunction(testCase)
     u = basis.eval(x, n);
 
     expected_u = [
-        0, 1, -3, 6, -10;
-        0, 1, -1.5, 0.375, 1.5625;
-        0, 1, 0, -(3/2), 0;
-        0, 1, 1.5, 0.375, -1.5625;
-        0, 1, 3, 6, 10
-        ];
+                  0, 1, -3, 6, -10;
+                  0, 1, -1.5, 0.375, 1.5625;
+                  0, 1, 0, - (3/2), 0;
+                  0, 1, 1.5, 0.375, -1.5625;
+                  0, 1, 3, 6, 10
+                  ];
 
     verifySize(testCase, u, size(expected_u));
     verifyEqual(testCase, u, expected_u, 'AbsTol', 1e-6);
@@ -44,12 +44,12 @@ function testEvalRowVector(testCase)
 
     u_row = basis.eval(x_row, n);
     expected_u_row = [
-        0, 1, -3, 6, -10;
-        0, 1, -1.5, 0.375, 1.5625;
-        0, 1, 0, -(3/2), 0;
-        0, 1, 1.5, 0.375, -1.5625;
-        0, 1, 3, 6, 10
-        ]';
+                      0, 1, -3, 6, -10;
+                      0, 1, -1.5, 0.375, 1.5625;
+                      0, 1, 0, - (3/2), 0;
+                      0, 1, 1.5, 0.375, -1.5625;
+                      0, 1, 3, 6, 10
+                      ]';
 
     verifyEqual(testCase, u_row, expected_u_row, 'AbsTol', 1e-6);
 end

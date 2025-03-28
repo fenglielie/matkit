@@ -35,15 +35,16 @@ classdef DataBox < handle
     %   db.check_all();     % This will throw an error because 'gamma' is missing
 
     properties (Access = public)
-        data    % A structure that holds the data fields.
+        data % A structure that holds the data fields.
     end
 
     properties (SetAccess = private)
-        name    % The name of the DataBox instance.
-        rules   % A structure that holds the rules applied to each field in `data`.
+        name % The name of the DataBox instance.
+        rules % A structure that holds the rules applied to each field in `data`.
     end
 
     methods
+
         function obj = DataBox(name)
             assert(ischar(name), 'name must be a string');
 
@@ -146,45 +147,57 @@ classdef DataBox < handle
 
             switch rule.type
                 case 'required'
+
                     if ~isfield(obj.data, fieldname)
+
                         if isempty(errMsg)
                             error('DataBox:FieldMissing', ...
                                 'DataBox(%s): %s is required but missing.', obj.name, fieldname);
                         else
                             error('DataBox:FieldMissing', 'DataBox(%s): %s', obj.name, errMsg);
                         end
+
                     end
 
                 case 'conditional'
+
                     if isfield(obj.data, fieldname) && ~rule.validator(obj.data.(fieldname))
+
                         if isempty(errMsg)
                             error('DataBox:ConditionNotMet', ...
                                 'DataBox(%s): %s exists but does not satisfy its condition.', obj.name, fieldname);
                         else
                             error('DataBox:ConditionNotMet', 'DataBox(%s): %s', obj.name, errMsg);
                         end
+
                     end
 
                 case 'mandatory'
+
                     if ~isfield(obj.data, fieldname)
+
                         if isempty(errMsg)
                             error('DataBox:MandatoryFieldMissing', ...
                                 'DataBox(%s): %s is required but missing.', obj.name, fieldname);
                         else
                             error('DataBox:MandatoryFieldMissing', 'DataBox(%s): %s', obj.name, errMsg);
                         end
+
                     elseif ~rule.validator(obj.data.(fieldname))
+
                         if isempty(errMsg)
                             error('DataBox:ValidationFailed', ...
                                 'DataBox(%s): %s does not satisfy its required condition.', obj.name, fieldname);
                         else
                             error('DataBox:ValidationFailed', 'DataBox(%s): %s', obj.name, errMsg);
                         end
+
                     end
 
                 otherwise
                     error('DataBox:UnknownRuleType', 'DataBox(%s): Unknown rule type for %s.', obj.name, fieldname);
             end
+
         end
 
         function check_all(obj)
@@ -202,9 +215,11 @@ classdef DataBox < handle
             %
 
             fields = fieldnames(obj.rules);
+
             for i = 1:numel(fields)
                 obj.check(fields{i});
             end
+
         end
 
         function newObj = copy(obj)
@@ -212,5 +227,7 @@ classdef DataBox < handle
             newObj.data = obj.data;
             newObj.rules = obj.rules;
         end
+
     end
+
 end

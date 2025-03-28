@@ -11,6 +11,7 @@ classdef MatLagrange < MatBase
     %   u = basis.eval(x, length(points));
 
     methods
+
         function obj = MatLagrange(x_points)
             % Constructor for MatLagrange
             %
@@ -32,9 +33,11 @@ classdef MatLagrange < MatBase
             % Call parent constructor
             obj@MatBase(funcs);
         end
+
     end
 
-    methods(Static)
+    methods (Static)
+
         function funcs = generateLagrangeFuncs(x_points)
             % Generate the Lagrange polynomial functions based on the given points
             %
@@ -51,13 +54,20 @@ classdef MatLagrange < MatBase
             for i = 1:n
                 % Lagrange basis polynomial for point i
                 L = @(x) 1;
+
                 for j = 1:n
+
                     if i ~= j
                         L = @(x) L(x) .* (x - x_points(j)) / (x_points(i) - x_points(j));
                     end
+
                 end
+
                 funcs{i} = L; % Store function handle in cell array
             end
+
         end
+
     end
+
 end

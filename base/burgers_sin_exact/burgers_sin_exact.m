@@ -21,7 +21,6 @@ function u = burgers_sin_exact(x, t, alpha, beta)
     u = alpha + beta * burgers_sin_newton(x - alpha * t, beta * t);
 end
 
-
 function u = burgers_sin_newton(x, t)
     % u_t + u u_x = 0, x in [-pi, pi]
     % u(x, 0) = sin(x)
@@ -36,8 +35,11 @@ function u = burgers_sin_newton(x, t)
     for iter = 1:1e5
         du = (u - sin(x - u * t)) ./ (1 + cos(x - u * t) * t);
         u = u - du;
+
         if max(abs(du)) < 1e-10
             break
         end
+
     end
+
 end

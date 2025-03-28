@@ -26,6 +26,7 @@ function result = order(xlist, ylist)
 
     num = length(xlist) - 1;
     result = zeros(num, 1);
+
     for w = 1:num
         result(w) = -log(ylist(w + 1) / ylist(w)) / log(xlist(w + 1) / xlist(w));
     end
@@ -33,4 +34,5 @@ function result = order(xlist, ylist)
     if size(xlist, 1) == 1
         result = result';
     end
+
 end

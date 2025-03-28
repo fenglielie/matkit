@@ -6,7 +6,6 @@ cd(fileparts(mfilename('fullpath')));
 run('../../base/setup.m')
 run('../../utils/setup.m')
 
-
 xleft = -2;
 xright = 2;
 
@@ -15,9 +14,8 @@ gk = 5; % Gauss Points
 
 dim = 3;
 
-basis = MatLegendre(pk+1);
-basis_dx = MatLegendreDx(pk+1);
-
+basis = MatLegendre(pk + 1);
+basis_dx = MatLegendreDx(pk + 1);
 
 %% plot test
 
@@ -30,8 +28,7 @@ nxlist = [40, 160];
 % exact_ref_func = @(s) eulereqs_sin_exact(s, t2, alpha, beta, omega, phi, u0_ic, p0_ic);
 % u_exact_ref = dg_projection_eulereqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis);
 
-
-for w=1:2
+for w = 1:2
     figure;
 
     [x, dx] = mesh_init_1d(xleft, xright, nxlist(w));
@@ -40,11 +37,11 @@ for w=1:2
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
     uh = dg_rk3_scheme_eqs(uh0, dx, t, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, true);
 
-    vc = basis.eval(0, pk+1); % column vector
+    vc = basis.eval(0, pk + 1); % column vector
 
-    v1 = vc' * uh(1:(pk+1), :);
-    v2 = vc' * uh(pk+2:2*(pk+1), :);
-    v3 = vc' * uh(2*(pk+1)+1:3*(pk+1), :);
+    v1 = vc' * uh(1:(pk + 1), :);
+    v2 = vc' * uh(pk + 2:2 * (pk + 1), :);
+    v3 = vc' * uh(2 * (pk + 1) + 1:3 * (pk + 1), :);
 
     [rho_values, u_values, p_values] = eulereqs_trans2raw(v1, v2, v3);
 

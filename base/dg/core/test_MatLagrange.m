@@ -11,7 +11,7 @@ function testConstructor(testCase)
 
     verifyClass(testCase, basis, 'MatLagrange');
     verifyEqual(testCase, length(basis.funcs), length(points), ...
-        'Incorrect number of basis functions stored.');
+    'Incorrect number of basis functions stored.');
 end
 
 %% Test Evaluation of Lagrange Polynomials
@@ -24,18 +24,18 @@ function testEvalFunction(testCase)
     u = basis.eval(x, length(points));
 
     expected_u = [
-        1., 0., 0.;
-        0.72, 0.36, -0.08;
-        0.48, 0.64, -0.12;
-        0.28, 0.84, -0.12;
-        0.12, 0.96, -0.08;
-        0., 1., 0.;
-        -0.08, 0.96, 0.12;
-        -0.12, 0.84, 0.28;
-        -0.12, 0.64, 0.48;
-        -0.08, 0.36, 0.72;
-        0., 0., 1.
-        ];
+                  1., 0., 0.;
+                  0.72, 0.36, -0.08;
+                  0.48, 0.64, -0.12;
+                  0.28, 0.84, -0.12;
+                  0.12, 0.96, -0.08;
+                  0., 1., 0.;
+                  -0.08, 0.96, 0.12;
+                  -0.12, 0.84, 0.28;
+                  -0.12, 0.64, 0.48;
+                  -0.08, 0.36, 0.72;
+                  0., 0., 1.
+                  ];
 
     verifySize(testCase, u, size(expected_u));
     verifyEqual(testCase, u, expected_u, 'AbsTol', 1e-6);
@@ -50,18 +50,18 @@ function testEvalRowVector(testCase)
 
     u_row = basis.eval(x_row, length(points));
     expected_u_row = [
-        1., 0., 0.;
-        0.72, 0.36, -0.08;
-        0.48, 0.64, -0.12;
-        0.28, 0.84, -0.12;
-        0.12, 0.96, -0.08;
-        0., 1., 0.;
-        -0.08, 0.96, 0.12;
-        -0.12, 0.84, 0.28;
-        -0.12, 0.64, 0.48;
-        -0.08, 0.36, 0.72;
-        0., 0., 1.
-        ]';
+                      1., 0., 0.;
+                      0.72, 0.36, -0.08;
+                      0.48, 0.64, -0.12;
+                      0.28, 0.84, -0.12;
+                      0.12, 0.96, -0.08;
+                      0., 1., 0.;
+                      -0.08, 0.96, 0.12;
+                      -0.12, 0.84, 0.28;
+                      -0.12, 0.64, 0.48;
+                      -0.08, 0.36, 0.72;
+                      0., 0., 1.
+                      ]';
 
     verifyEqual(testCase, u_row, expected_u_row, 'AbsTol', 1e-6);
 end

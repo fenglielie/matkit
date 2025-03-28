@@ -96,8 +96,8 @@ function testCopyMethod(testCase)
     % Modify db1's data and verify db2 is not affected
     db1.data.alpha = 100;
 
-    verifyNotEqual(testCase, db1.data.alpha, db2.data.alpha);  % db2 should still have the original value
-    verifyEqual(testCase, db2.data.alpha, 42);  % db2's alpha should not have changed
+    verifyNotEqual(testCase, db1.data.alpha, db2.data.alpha); % db2 should still have the original value
+    verifyEqual(testCase, db2.data.alpha, 42); % db2's alpha should not have changed
 
     % Verify db2's data remains intact when db1 is modified
     verifyEqual(testCase, db2.data.beta, 10);

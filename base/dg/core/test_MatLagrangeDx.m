@@ -11,7 +11,7 @@ function testConstructor(testCase)
 
     verifyClass(testCase, basisDx, 'MatLagrangeDx');
     verifyEqual(testCase, length(basisDx.funcs), length(points), ...
-        'Incorrect number of derivative basis functions stored.');
+    'Incorrect number of derivative basis functions stored.');
 end
 
 %% Test Evaluation of Lagrange Derivative Polynomials
@@ -24,18 +24,18 @@ function testEvalFunction(testCase)
     du = basisDx.eval(x, length(points));
 
     expected_du = [
-        -1.5, 2., -0.5;
-        -1.3, 1.6, -0.3;
-        -1.1, 1.2, -0.1;
-        -0.9, 0.8, 0.1;
-        -0.7, 0.4, 0.3;
-        -0.5, 0., 0.5;
-        -0.3, -0.4, 0.7;
-        -0.1, -0.8, 0.9;
-        0.1, -1.2, 1.1;
-        0.3, -1.6, 1.3;
-        0.5, -2., 1.5
-        ];
+                   -1.5, 2., -0.5;
+                   -1.3, 1.6, -0.3;
+                   -1.1, 1.2, -0.1;
+                   -0.9, 0.8, 0.1;
+                   -0.7, 0.4, 0.3;
+                   -0.5, 0., 0.5;
+                   -0.3, -0.4, 0.7;
+                   -0.1, -0.8, 0.9;
+                   0.1, -1.2, 1.1;
+                   0.3, -1.6, 1.3;
+                   0.5, -2., 1.5
+                   ];
 
     verifySize(testCase, du, size(expected_du));
     verifyEqual(testCase, du, expected_du, 'AbsTol', 1e-6);
@@ -50,18 +50,18 @@ function testEvalRowVector(testCase)
 
     du_row = basisDx.eval(x_row, length(points));
     expected_du_row = [
-        -1.5, 2., -0.5;
-        -1.3, 1.6, -0.3;
-        -1.1, 1.2, -0.1;
-        -0.9, 0.8, 0.1;
-        -0.7, 0.4, 0.3;
-        -0.5, 0., 0.5;
-        -0.3, -0.4, 0.7;
-        -0.1, -0.8, 0.9;
-        0.1, -1.2, 1.1;
-        0.3, -1.6, 1.3;
-        0.5, -2., 1.5
-        ]';
+                       -1.5, 2., -0.5;
+                       -1.3, 1.6, -0.3;
+                       -1.1, 1.2, -0.1;
+                       -0.9, 0.8, 0.1;
+                       -0.7, 0.4, 0.3;
+                       -0.5, 0., 0.5;
+                       -0.3, -0.4, 0.7;
+                       -0.1, -0.8, 0.9;
+                       0.1, -1.2, 1.1;
+                       0.3, -1.6, 1.3;
+                       0.5, -2., 1.5
+                       ]';
 
     verifyEqual(testCase, du_row, expected_du_row, 'AbsTol', 1e-6);
 end

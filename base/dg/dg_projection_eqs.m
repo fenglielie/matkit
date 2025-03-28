@@ -27,13 +27,13 @@ function u = dg_projection_eqs(f, x, dx, pk, gk, basis, dim)
     assert(isscalar(pk) && pk >= 0 && mod(pk, 1) == 0, 'pk must be a non-negative integer.');
     assert(isscalar(gk) && gk > 0 && mod(gk, 1) == 0, 'gk must be a positive integer.');
     assert(isa(basis, 'MatBase'), 'basis must be an instance of MatBase or its derived class.');
-    assert(2*gk >= basis.funcs_num, ...
-        'numerical quadrature formula requires at least twice the number of basis functions.');
+    assert(2 * gk >= basis.funcs_num, ...
+    'numerical quadrature formula requires at least twice the number of basis functions.');
     assert(isscalar(dim) && dim > 0 && mod(dim, 1) == 0, 'dim must be a positive integer.');
 
     [points, weights] = gauss_legendre(gk);
 
-    M = basis.eval(points, pk+1);
+    M = basis.eval(points, pk + 1);
     W = diag(weights);
 
     Md = kron(eye(dim), M);
@@ -43,8 +43,9 @@ function u = dg_projection_eqs(f, x, dx, pk, gk, basis, dim)
     z = zeros(dim * gk, nx);
 
     v_cs = cell(dim, 1);
+
     for idx = 1:nx
-        y = x(idx) + dx/2 * points;
+        y = x(idx) + dx / 2 * points;
         [v_cs{:}] = f(y);
         z(:, idx) = cell2mat(v_cs);
     end

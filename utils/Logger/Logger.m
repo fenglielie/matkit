@@ -33,18 +33,19 @@ classdef Logger < handle
 
     properties (Constant)
         DEBUG = 1;
-        INFO  = 2;
-        WARN  = 3;
+        INFO = 2;
+        WARN = 3;
         ERROR = 4;
     end
 
     properties (SetAccess = private)
-        level  = Logger.INFO;   % Minimum log level
-        fileID = -1;            % File handle (-1 = no file)
-        format = 'level';       % Log message format
+        level = Logger.INFO; % Minimum log level
+        fileID = -1; % File handle (-1 = no file)
+        format = 'level'; % Log message format
     end
 
     methods
+
         function obj = Logger(varargin)
             % Logger Constructor
             %
@@ -67,6 +68,7 @@ classdef Logger < handle
             obj.close_file();
 
             [fid, msg] = fopen(fileName, 'a'); % append
+
             if fid == -1
                 error('Logger:FileError', 'Failed to open %s: %s', fileName, msg);
             end
@@ -82,6 +84,7 @@ classdef Logger < handle
             obj.close_file();
 
             [fid, msg] = fopen(fileName, 'w'); % overwrite
+
             if fid == -1
                 error('Logger:FileError', 'Failed to open %s: %s', fileName, msg);
             end
@@ -150,9 +153,11 @@ classdef Logger < handle
         function delete(obj)
             obj.close_file();
         end
+
     end
 
     methods (Access = private)
+
         function log(obj, level, fmt, varargin)
             msg = sprintf(fmt, varargin{:});
             logStr = obj.format_log(level, msg);
@@ -160,12 +165,15 @@ classdef Logger < handle
             if obj.fileID ~= -1
                 fprintf(obj.fileID, logStr);
             else
+
                 if level >= Logger.WARN
-                    fprintf(2, logStr);   % stderr
+                    fprintf(2, logStr); % stderr
                 else
-                    fprintf(1, logStr);   % stdout
+                    fprintf(1, logStr); % stdout
                 end
+
             end
+
         end
 
         function str = format_log(obj, level, msg)
@@ -179,6 +187,7 @@ classdef Logger < handle
                 case 'timestamp_and_level'
                     str = sprintf('[%s] [%s] %s\n', obj.get_timestamp(), levelStr, msg);
             end
+
         end
 
         function ts = get_timestamp(~)
@@ -186,13 +195,17 @@ classdef Logger < handle
         end
 
         function str = get_level_str(~, level)
+
             switch level
                 case Logger.DEBUG, str = 'DEBUG';
                 case Logger.INFO, str = 'INFO';
                 case Logger.WARN, str = 'WARN';
                 case Logger.ERROR, str = 'ERROR';
-                otherwise, str = 'UNKNOWN';
+                otherwise , str = 'UNKNOWN';
             end
+
         end
+
     end
+
 end

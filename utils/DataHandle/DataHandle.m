@@ -19,7 +19,8 @@ classdef DataHandle < handle
     %       a.data.value = 100;
     %   end
 
-    properties(Access=public)
-        data = struct();  % A structure for storing arbitrary data.
+    properties (Access = public)
+        data = struct(); % A structure for storing arbitrary data.
     end
+
 end

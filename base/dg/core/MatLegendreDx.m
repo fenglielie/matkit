@@ -17,6 +17,7 @@ classdef MatLegendreDx < MatBase
     %   p4(x) = (1/8)*(35*x^4 - 30*x^2 + 3)
 
     methods
+
         function obj = MatLegendreDx(n)
             % Constructor for MatLegendreDx
             %
@@ -38,9 +39,11 @@ classdef MatLegendreDx < MatBase
             % Call parent constructor
             obj@MatBase(dfuncs);
         end
+
     end
 
-    methods(Static)
+    methods (Static)
+
         function dfuncs = generateLegendreDerivatives(n)
             % Generate the first 'n' Legendre polynomial derivatives
             %
@@ -79,9 +82,12 @@ classdef MatLegendreDx < MatBase
             syms x;
 
             for k = 1:n
-                dP = diff(legendreP(k-1, x), x);
+                dP = diff(legendreP(k - 1, x), x);
                 dfuncs{k} = matlabFunction(dP, 'Vars', x);
             end
+
         end
+
     end
+
 end

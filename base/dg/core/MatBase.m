@@ -9,11 +9,12 @@ classdef MatBase < handle
     %   eval       - Evaluate the first 'n' basis functions at points 'x'.
 
     properties
-        funcs      % Basis function list (cell array of function handles)
-        funcs_num  % Number of basis functions
+        funcs % Basis function list (cell array of function handles)
+        funcs_num % Number of basis functions
     end
 
     methods
+
         function obj = MatBase(funcs)
             % Constructor for MatBase
             %
@@ -53,16 +54,18 @@ classdef MatBase < handle
             if ~isvector(x)
                 error('MatBase:InvalidInput', 'x must be a vector.');
             end
+
             if n > obj.funcs_num
                 error('MatBase:InvalidInput', 'n=%d exceeds available basis functions (%d).', n, obj.funcs_num);
             end
 
             % Preserve input shape
             is_row_vector = isrow(x);
-            x_col = x(:);  % Ensure x is a column vector
+            x_col = x(:); % Ensure x is a column vector
 
             % Evaluate basis functions
             u = zeros(length(x_col), n);
+
             for i = 1:n
                 u(:, i) = obj.funcs{i}(x_col);
             end
@@ -71,6 +74,9 @@ classdef MatBase < handle
             if is_row_vector
                 u = u.';
             end
+
         end
+
     end
+
 end

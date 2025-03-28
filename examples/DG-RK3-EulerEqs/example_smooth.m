@@ -6,7 +6,6 @@ cd(fileparts(mfilename('fullpath')));
 run('../../base/setup.m')
 run('../../utils/setup.m')
 
-
 alpha = 1;
 beta = 0.2;
 omega = 1;
@@ -22,8 +21,8 @@ gk = 5; % Gauss Points
 
 dim = 3;
 
-basis = MatLegendre(pk+1);
-basis_dx = MatLegendreDx(pk+1);
+basis = MatLegendre(pk + 1);
+basis_dx = MatLegendreDx(pk + 1);
 
 %% order test
 
@@ -46,7 +45,6 @@ end
 
 show_results(nxlist, errors(1, :), errors(2, :), errors(3, :));
 
-
 %% plot test
 
 t2 = 0.6;
@@ -61,18 +59,18 @@ u_exact_ref = dg_projection_eqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis, di
 figure;
 hold on
 
-for w=1:2
+for w = 1:2
     [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
 
     init_func = @(s) eulereqs_sin_exact(s, 0, alpha, beta, omega, phi, u0_ic, p0_ic);
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
     uh = dg_rk3_scheme_eqs(uh0, dx, t2, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, false);
 
-    v = basis.eval(0, pk+1); % column vector
+    v = basis.eval(0, pk + 1); % column vector
 
-    rho_mean_values_ref = v' * u_exact_ref(1:(pk+1), :);
+    rho_mean_values_ref = v' * u_exact_ref(1:(pk + 1), :);
 
-    rho_values = v' * uh(1:(pk+1), :);
+    rho_values = v' * uh(1:(pk + 1), :);
 
     plot(x_ref, rho_mean_values_ref)
     plot(x, rho_values)

@@ -19,7 +19,6 @@ easy_plot(x, {sin(x), cos(x)}, 'ShowFigure', false, 'Title', 'Trigonometric Func
     'XLabel', 'x', 'YLabel', 'y', 'Legend', {'sin(x)', 'cos(x)'}, ...
     'SaveAs', 'trig_plot.pdf');
 
-
 % Customize line styles, markers, and save as EPS
 x = linspace(-pi, pi, 100);
 easy_plot(x, {sin(x), cos(x), x}, 'LineWidth', 2, 'Title', 'Trigonometric Functions', ...

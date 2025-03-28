@@ -17,6 +17,7 @@ classdef MatLegendre < MatBase
     %   p4(x) = (1/8)*(35*x^4 - 30*x^2 + 3)
 
     methods
+
         function obj = MatLegendre(n)
             % Constructor for MatLegendre
             %
@@ -38,9 +39,11 @@ classdef MatLegendre < MatBase
             % Call parent constructor
             obj@MatBase(funcs);
         end
+
     end
 
-    methods(Static)
+    methods (Static)
+
         function funcs = generateLegendreFuncs(n)
             % Generate the first 'n' Legendre polynomial functions
             %
@@ -73,9 +76,13 @@ classdef MatLegendre < MatBase
             % end
 
             funcs = cell(1, n);
+
             for k = 1:n
-                funcs{k} = @(x) legendreP(k-1, x);
+                funcs{k} = @(x) legendreP(k - 1, x);
             end
+
         end
+
     end
+
 end

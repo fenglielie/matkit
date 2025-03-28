@@ -14,7 +14,7 @@ xright = pi;
 pk = 3; % Pk
 gk = 8; % Gauss Points
 
-[points, ~] = gauss_lobatto(pk+1);
+[points, ~] = gauss_lobatto(pk + 1);
 basis = MatLagrange(points);
 basis_dx = MatLagrangeDx(points);
 
@@ -53,14 +53,14 @@ u_exact_ref = dg_projection(exact_ref_func, x_ref, dx_ref, pk, gk, basis);
 figure;
 hold on
 
-for w=1:2
+for w = 1:2
     [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
 
     init_func = @(s) alpha + beta * sin(s);
     uh0 = dg_projection(init_func, x, dx, pk, gk, basis);
     uh = dg_rk3_scheme(uh0, dx, t2, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, basis, basis_dx);
 
-    v = basis.eval(0, pk+1); % column vector
+    v = basis.eval(0, pk + 1); % column vector
 
     plot(x_ref, v' * u_exact_ref)
     plot(x, v' * uh)
@@ -69,7 +69,7 @@ end
 hold off
 
 function result = burgers_fhat_LF(ul, ur, c)
-    result = 0.25*(ul.^2 + ur.^2) - (0.5*c).*(ur-ul);
+    result = 0.25 * (ul .^ 2 + ur .^ 2) - (0.5 * c) .* (ur - ul);
 end
 
 function result = burgers_df(u)
@@ -77,5 +77,5 @@ function result = burgers_df(u)
 end
 
 function result = burgers_f(u)
-    result = 0.5*u.^2;
+    result = 0.5 * u .^ 2;
 end

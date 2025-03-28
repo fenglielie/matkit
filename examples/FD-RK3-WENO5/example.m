@@ -27,7 +27,7 @@ for w = 1:n
     u_exact = burgers_sin_exact(x, t1, alpha, beta);
 
     errors(1, w) = sum(abs(uh - u_exact)) * dx;
-    errors(2, w) = sqrt(sum(abs(uh - u_exact).^2) * dx);
+    errors(2, w) = sqrt(sum(abs(uh - u_exact) .^ 2) * dx);
     errors(3, w) = max(abs(uh - u_exact));
 end
 
@@ -46,7 +46,7 @@ figure(w);
 hold on
 plot(x_ref, u_exact_ref)
 
-for w=1:2
+for w = 1:2
     [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
 
     uh0 = alpha + beta * sin(x);
@@ -58,11 +58,11 @@ end
 hold off
 
 function result = burgers_fl(u, c)
-    result = u.^2/4 + c/2.*u;
+    result = u .^ 2/4 + c / 2 .* u;
 end
 
 function result = burgers_fr(u, c)
-    result = u.^2/4 - c/2.*u;
+    result = u .^ 2/4 - c / 2 .* u;
 end
 
 function result = burgers_df(u)

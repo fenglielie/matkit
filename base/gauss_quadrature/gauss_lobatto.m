@@ -22,7 +22,7 @@ function [x, w] = gauss_lobatto(n)
     L = zeros(n, n);
 
     % Initial guess.
-    x = cos(pi*(0:n - 1)/(n - 1))';
+    x = cos(pi * (0:n - 1) / (n - 1))';
 
     % Newton's iteration.
     % Find the roots of q_n(x) = (1-x^2) p_{n-1}'(x).
@@ -32,19 +32,20 @@ function [x, w] = gauss_lobatto(n)
 
         for k = 2:n - 1
             % p_k(x) = (2k-1)/k * x * p_{k-1}(x) - (k-1)/k * p_{k-2}(x)
-            L(:, k+1) = (2 * k - 1) / k * x .* L(:, k) - (k - 1) / k * L(:, k-1);
+            L(:, k + 1) = (2 * k - 1) / k * x .* L(:, k) - (k - 1) / k * L(:, k - 1);
         end
 
         % q_n(x) = (1-x^2) p_{n-1}'(x) = -(n-1) * [x * p_{n-1}(x) - p_{n-2}(x)]
         % q_n'(x) = -(n-1)n * p_{n-1}(x)
-        dx = (x .* L(:, n) - L(:, n-1)) ./ (n * L(:, n));
+        dx = (x .* L(:, n) - L(:, n - 1)) ./ (n * L(:, n));
         x = x - dx;
 
         if max(abs(dx)) < eps
             break
         end
+
     end
 
     % Compute the weights.
-    w = 2 ./ ((n - 1) * n * L(:, n).^2);
+    w = 2 ./ ((n - 1) * n * L(:, n) .^ 2);
 end
