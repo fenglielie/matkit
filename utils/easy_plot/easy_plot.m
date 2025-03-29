@@ -2,21 +2,21 @@ function handles = easy_plot(x, y, varargin)
     % EASY_PLOT A flexible plotting function that supports multiple curves.
     %
     % INPUT:
-    %   x               - x data, a vector or a cell array of vectors.
-    %   y               - y data, a vector or a cell array of vectors (multiple curves).
+    %   x                   - x data, a vector or a cell array of vectors.
+    %   y                   - y data, a vector or a cell array of vectors (multiple curves).
     %
     %   Optional Key-Value Pairs:
-    %   'LineWidth'     - Line width, default is 1.5.
-    %   'Title'         - Title of the plot.
-    %   'XLabel'        - Label for the x-axis.
-    %   'YLabel'        - Label for the y-axis.
-    %   'Legend'        - Cell array of legend entries, should match number of curves.
-    %   'ShowFigure'    - Whether to display the plot window, boolean, default is true.
-    %   'SaveAs'        - Path and filename to save the plot. If empty, the plot is not saved.
-    %   'SilentSave'    - Whether to suppress the saving message.
+    %       'LineWidth'     - Line width, default is 1.5.
+    %       'Title'         - Title of the plot.
+    %       'XLabel'        - Label for the x-axis.
+    %       'YLabel'        - Label for the y-axis.
+    %       'Legend'        - Cell array of legend entries, should match number of curves.
+    %       'ShowFigure'    - Whether to display the plot window, boolean, default is true.
+    %       'SaveAs'        - Path and filename to save the plot. If empty, the plot is not saved.
+    %       'SilentSave'    - Whether to suppress the saving message.
     %
     % OUTPUT:
-    %   handles         - Handles to the plot axes.
+    %   handles             - Handles to the plot axes.
     %
     % EXAMPLE:
     %   x = linspace(0, 10, 100);
@@ -68,21 +68,21 @@ function handles = easy_plot(x, y, varargin)
         y = {y};
     end
 
-    numCurves = length(y); % Number of curves to plot
+    numCurves = numel(y); % Number of curves to plot
 
     if ~iscell(x)
         % If x is a single array, replicate it for each y
         x = repmat({x}, 1, numCurves);
     end
 
-    % Ensure that each x{i} and y{i} have the same length
+    % Ensure that each x{i} and y{i} have the same size
     for i = 1:numCurves
-        assert(length(x{i}) == length(y{i}), 'Each x{i} and y{i} must have the same length.');
+        assert(isequal(size(x{i}), size(y{i})), 'Each x{i} and y{i} must have the same size.');
     end
 
     % Validate legend input
     if ~isempty(LegendStr)
-        assert(length(LegendStr) == numCurves, 'Legend entries must match the number of curves.');
+        assert(numel(LegendStr) == numCurves, 'Legend entries must match the number of curves.');
     end
 
     % Create the figure window, show or hide based on the 'ShowFigure' flag
@@ -96,40 +96,36 @@ function handles = easy_plot(x, y, varargin)
     handles = gobjects(1, numCurves); % Pre-allocate handles array
 
     % Automatically assign colors, line styles, and markers
-    defaultColors = lines(numCurves);
+    colorOrder = get(gca, 'ColorOrder');
     lineStyles = {'-', '--', ':', '-.'};
     markers = {'o', 's', 'd', 'p', 'h', '^', 'v', '<', '>'};
+
+    totalMarkerNum = min(10 * numCurves, 50);
+    markerIndices = compute_marker_indices(x, totalMarkerNum);
 
     for i = 1:numCurves
         xi = x{i};
         yi = y{i};
-        plotColor = defaultColors(i, :); % Assign color
-        autoLineStyle = lineStyles{mod(i - 1, length(lineStyles)) + 1}; % Assign line style
-        autoMarker = markers{mod(i - 1, length(markers)) + 1}; % Assign marker style
-
-        % Automatically adjust MarkerIndices (marker spacing)
-        numMarkers = min(10, length(xi)); % Ensure at least 10 markers
-        offset = round((i - 1) * length(xi) / (numCurves + 1)); % Offset each curve's markers
-        markerIdx = mod(round(linspace(1, length(xi), numMarkers)) + offset, length(xi)) + 1; % Generate marker indices
+        plotColor = colorOrder(mod(i - 1, size(colorOrder, 1)) + 1, :); % Assign color
+        autoLineStyle = lineStyles{mod(i - 1, numel(lineStyles)) + 1}; % Assign line style
+        autoMarker = markers{mod(i - 1, numel(markers)) + 1}; % Assign marker style
 
         % Plot the curve
         handles(i) = plot(xi, yi, 'LineWidth', LineWidth, ...
             'LineStyle', autoLineStyle, 'Marker', autoMarker, ...
-            'MarkerIndices', markerIdx, 'Color', plotColor);
+            'MarkerIndices', markerIndices{i}, 'Color', plotColor);
     end
 
     hold off;
+    grid on;
 
     % Set title and axis labels if provided
     if ~isempty(TitleStr), title(TitleStr); end
     if ~isempty(XLabelStr), xlabel(XLabelStr); end
     if ~isempty(YLabelStr), ylabel(YLabelStr); end
 
-    % Add grid
-    grid on;
-
     % Set legend if provided
-    if ~isempty(LegendStr) && length(LegendStr) == numCurves
+    if ~isempty(LegendStr) && numel(LegendStr) == numCurves
         legend(LegendStr, 'Location', 'best');
     end
 
@@ -152,6 +148,43 @@ function handles = easy_plot(x, y, varargin)
             fprintf('Figure saved as: %s\n', SaveAsFile);
         end
 
+    end
+
+end
+
+function markerIndices = compute_marker_indices(x, totalMarkers)
+    numCurves = numel(x);
+
+    xmin = inf;
+    xmax = -inf;
+
+    for i = 1:numCurves
+        xi = x{i};
+        xmin = min(xmin, min(xi));
+        xmax = max(xmax, max(xi));
+    end
+
+    globalMarkers = linspace(xmin, xmax, totalMarkers);
+
+    markerIndices = cell(1, numCurves);
+
+    for i = 1:numCurves
+        markerIndices{i} = [];
+    end
+
+    for j = 1:totalMarkers
+        curveIdx = mod(j - 1, numCurves) + 1;
+        xi = x{curveIdx};
+
+        if globalMarkers(j) >= min(xi) && globalMarkers(j) <= max(xi)
+            [~, idx] = min(abs(xi - globalMarkers(j)));
+            markerIndices{curveIdx}(end + 1) = idx;
+        end
+
+    end
+
+    for i = 1:numCurves
+        markerIndices{i} = unique(markerIndices{i});
     end
 
 end
