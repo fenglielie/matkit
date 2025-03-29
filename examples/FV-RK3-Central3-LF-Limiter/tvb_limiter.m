@@ -12,7 +12,7 @@ function [ul_plus, ur_minus] = tvb_limiter_in(ul_plus, u, ur_minus, dx, tvb_m)
     uright = circshift(u, -1);
     uleft = circshift(u, 1);
 
-    for w = 1:length(u)
+    for w = 1:numel(u)
         ul_plus(w) = u(w) - TVB(u(w) - ul_plus(w), u(w) - uleft(w), uright(w) - u(w), dx, tvb_m);
         ur_minus(w) = u(w) + TVB(ur_minus(w) - u(w), u(w) - uleft(w), uright(w) - u(w), dx, tvb_m);
     end

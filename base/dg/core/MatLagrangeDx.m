@@ -8,7 +8,7 @@ classdef MatLagrangeDx < MatBase
     %   points = [-1, 0, 1];
     %   basis_dx = MatLagrangeDx(points);
     %   x = linspace(-1, 1, 10);
-    %   du = basis_dx.eval(x, length(points)); % size = (3, 10)
+    %   du = basis_dx.eval(x, numel(points)); % size = (3, 10)
 
     methods
 
@@ -23,7 +23,7 @@ classdef MatLagrangeDx < MatBase
             % EXAMPLE:
             %   basis_dx = MatLagrangeDx([-1, 0, 1]);
 
-            if ~isvector(x_points) || length(x_points) < 2
+            if ~isvector(x_points) || numel(x_points) < 2
                 error('MatLagrangeDx:InvalidInput', 'x_points must be a vector with at least two elements.');
             end
 
@@ -47,7 +47,7 @@ classdef MatLagrangeDx < MatBase
             % OUTPUT:
             %   funcs       - Cell array of Lagrange polynomial derivatives function handles
 
-            n = length(x_points);
+            n = numel(x_points);
             funcs = cell(1, n);
 
             % Loop over each point and construct the derivative of the corresponding Lagrange basis polynomial

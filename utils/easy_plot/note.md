@@ -6,7 +6,7 @@
 |   修改线型    |                `handles(1).LineStyle = '--';`                |
 |   修改线宽    |                 `handles(1).LineWidth = 2;`                  |
 |   修改标记    |                  `handles(1).Marker = 'o';`                  |
-| 修改标记间隔  |  `handles(1).MarkerIndices = 1:5:length(handles(1).XData);`  |
+| 修改标记间隔  |  `handles(1).MarkerIndices = 1:5:numel(handles(1).XData);`  |
 |   获取数据    |   `x_data = handles(1).XData; y_data = handles(1).YData;`    |
 | 隐藏/显示曲线 | `handles(1).Visible = 'off';` / `handles(1).Visible = 'on';` |
 |   修改图例    |        `handles(1).DisplayName = 'New Name'; legend;`        |

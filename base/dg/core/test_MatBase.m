@@ -10,7 +10,7 @@ function testConstructor(testCase)
     basis = MatBase(funcs);
 
     verifyClass(testCase, basis, 'MatBase');
-    verifyEqual(testCase, basis.funcs_num, length(funcs), ...
+    verifyEqual(testCase, basis.funcs_num, numel(funcs), ...
     'Incorrect number of basis functions stored.');
 end
 

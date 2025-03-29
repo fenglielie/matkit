@@ -14,7 +14,7 @@ function [res_ul, res_ur] = weno5(u)
     ur_mat = [u; circshift(u, -1); circshift(u, -2)];
 
     % smooth indicator
-    b = zeros(3, length(u));
+    b = zeros(3, numel(u));
     b(1, :) = 13.0/12 * ([1, -2, 1] * ul_mat) .^ 2 + 1.0/4 * ([1, -4, 3] * ul_mat) .^ 2;
     b(2, :) = 13.0/12 * ([1, -2, 1] * u_mat) .^ 2 + 1.0/4 * ([1, 0, -1] * u_mat) .^ 2;
     b(3, :) = 13.0/12 * ([1, -2, 1] * ur_mat) .^ 2 + 1.0/4 * ([3, -4, 1] * ur_mat) .^ 2;

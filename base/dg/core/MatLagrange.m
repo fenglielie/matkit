@@ -8,7 +8,7 @@ classdef MatLagrange < MatBase
     %   points = [-1, 0, 1];
     %   basis = MatLagrange(points);
     %   x = linspace(-1, 1, 10);
-    %   u = basis.eval(x, length(points));
+    %   u = basis.eval(x, numel(points));
 
     methods
 
@@ -23,7 +23,7 @@ classdef MatLagrange < MatBase
             % EXAMPLE:
             %   basis = MatLagrange([-1, 0, 1]);
 
-            if ~isvector(x_points) || length(x_points) < 2
+            if ~isvector(x_points) || numel(x_points) < 2
                 error('MatLagrange:InvalidInput', 'x_points must be a vector with at least two elements.');
             end
 
@@ -47,7 +47,7 @@ classdef MatLagrange < MatBase
             % OUTPUT:
             %   funcs       - Cell array of Lagrange polynomial function handles
 
-            n = length(x_points);
+            n = numel(x_points);
             funcs = cell(1, n);
 
             % Loop over each point and construct the corresponding Lagrange basis polynomial

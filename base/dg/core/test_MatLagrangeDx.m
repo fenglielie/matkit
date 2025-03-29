@@ -10,7 +10,7 @@ function testConstructor(testCase)
     basisDx = MatLagrangeDx(points);
 
     verifyClass(testCase, basisDx, 'MatLagrangeDx');
-    verifyEqual(testCase, length(basisDx.funcs), length(points), ...
+    verifyEqual(testCase, numel(basisDx.funcs), numel(points), ...
     'Incorrect number of derivative basis functions stored.');
 end
 
@@ -21,7 +21,7 @@ function testEvalFunction(testCase)
     basisDx = MatLagrangeDx(points);
     x = linspace(-1, 1, 11)';
 
-    du = basisDx.eval(x, length(points));
+    du = basisDx.eval(x, numel(points));
 
     expected_du = [
                    -1.5, 2., -0.5;
@@ -48,7 +48,7 @@ function testEvalRowVector(testCase)
     basisDx = MatLagrangeDx(points);
     x_row = linspace(-1, 1, 11);
 
-    du_row = basisDx.eval(x_row, length(points));
+    du_row = basisDx.eval(x_row, numel(points));
     expected_du_row = [
                        -1.5, 2., -0.5;
                        -1.3, 1.6, -0.3;
@@ -73,9 +73,9 @@ function testEvalLargeInput(testCase)
     basisDx_large = MatLagrangeDx(points_large);
     x_large = linspace(-1, 1, 50)';
 
-    du_large = basisDx_large.eval(x_large, length(points_large));
+    du_large = basisDx_large.eval(x_large, numel(points_large));
 
-    verifySize(testCase, du_large, [length(x_large), length(points_large)]);
+    verifySize(testCase, du_large, [numel(x_large), numel(points_large)]);
 end
 
 %% Test Invalid Constructor Input

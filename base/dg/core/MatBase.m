@@ -30,7 +30,7 @@ classdef MatBase < handle
             end
 
             obj.funcs = funcs;
-            obj.funcs_num = length(funcs);
+            obj.funcs_num = numel(funcs);
         end
 
         function u = eval(obj, x, n)
@@ -65,7 +65,7 @@ classdef MatBase < handle
             x_col = x(:); % Ensure x is a column vector
 
             % Evaluate basis functions
-            u = zeros(length(x_col), n);
+            u = zeros(numel(x_col), n);
 
             for i = 1:n
                 u(:, i) = obj.funcs{i}(x_col);

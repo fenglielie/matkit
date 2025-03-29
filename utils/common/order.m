@@ -9,11 +9,11 @@ function result = order(xlist, ylist)
     %
     % INPUT:
     %   xlist   - A numeric vector containing x-values.
-    %   ylist   - A numeric vector containing y-values corresponding to xlist.
+    %   ylist   - A numeric vector containing y-values, must have the same size as xlist.
     %
     % OUTPUT:
-    %   result  - A vector containing the computed order values for each pair of
-    %            consecutive (x, y) points.
+    %   result  - A vector containing the computed order values.
+    %             result is a row/column vector if xlist and ylist are row/column vectors,
     %
     % EXAMPLE:
     %   order([10, 20, 40], [0.5, 0.25, 0.125])   => [1, 1]
@@ -22,16 +22,16 @@ function result = order(xlist, ylist)
     assert(isvector(xlist) && isnumeric(xlist), 'xlist must be a numeric vector.');
     assert(isvector(ylist) && isnumeric(ylist), 'ylist must be a numeric vector.');
     assert(all(size(xlist) == size(ylist)), 'xlist and ylist must have the same size.');
-    assert(length(xlist) >= 2, 'xlist and ylist must have at least two elements.');
+    assert(numel(xlist) >= 2, 'xlist and ylist must have at least two elements.');
 
-    num = length(xlist) - 1;
+    num = numel(xlist) - 1;
     result = zeros(num, 1);
 
     for w = 1:num
         result(w) = -log(ylist(w + 1) / ylist(w)) / log(xlist(w + 1) / xlist(w));
     end
 
-    if size(xlist, 1) == 1
+    if isrow(xlist)
         result = result';
     end
 

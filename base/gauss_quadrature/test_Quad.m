@@ -61,9 +61,9 @@ end
 %% Error handling tests (assert failures)
 
 function testInvalidNodesWeightsLength(testCase)
-    % nodes and weights length mismatch
-    fcn = @() Quad('nodes', [0, 1], 'weights', [1]);
-    verifyAssertionFailure(testCase, fcn, 'nodes and weights must have the same length.');
+    % nodes and weights size mismatch
+    fcn = @() Quad('nodes', [0, 1], 'weights', 1);
+    verifyAssertionFailure(testCase, fcn, 'nodes and weights must have the same size.');
 end
 
 function testInvalidIntegrationInputs(testCase)

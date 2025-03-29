@@ -22,7 +22,7 @@ basis_dx = MatLagrangeDx(points);
 
 t1 = 0.5;
 nxlist = [10, 20, 40, 80, 160, 320, 640];
-n = length(nxlist);
+n = numel(nxlist);
 errors = zeros(3, n);
 
 for w = 1:n

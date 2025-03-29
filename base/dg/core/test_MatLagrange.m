@@ -10,7 +10,7 @@ function testConstructor(testCase)
     basis = MatLagrange(points);
 
     verifyClass(testCase, basis, 'MatLagrange');
-    verifyEqual(testCase, length(basis.funcs), length(points), ...
+    verifyEqual(testCase, numel(basis.funcs), numel(points), ...
     'Incorrect number of basis functions stored.');
 end
 
@@ -21,7 +21,7 @@ function testEvalFunction(testCase)
     basis = MatLagrange(points);
     x = linspace(-1, 1, 11)';
 
-    u = basis.eval(x, length(points));
+    u = basis.eval(x, numel(points));
 
     expected_u = [
                   1., 0., 0.;
@@ -48,7 +48,7 @@ function testEvalRowVector(testCase)
     basis = MatLagrange(points);
     x_row = linspace(-1, 1, 11);
 
-    u_row = basis.eval(x_row, length(points));
+    u_row = basis.eval(x_row, numel(points));
     expected_u_row = [
                       1., 0., 0.;
                       0.72, 0.36, -0.08;
@@ -73,9 +73,9 @@ function testEvalLargeInput(testCase)
     basis_large = MatLagrange(points_large);
     x_large = linspace(-1, 1, 50)';
 
-    u_large = basis_large.eval(x_large, length(points_large));
+    u_large = basis_large.eval(x_large, numel(points_large));
 
-    verifySize(testCase, u_large, [length(x_large), length(points_large)]);
+    verifySize(testCase, u_large, [numel(x_large), numel(points_large)]);
 end
 
 %% Test Invalid Constructor Input

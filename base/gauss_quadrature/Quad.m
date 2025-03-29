@@ -29,7 +29,7 @@ classdef Quad
             %
             % Key-Value Parameters:
             %   'nodes'     - Quadrature nodes (numeric vector).
-            %   'weights'   - Quadrature weights (numeric vector), same length as nodes.
+            %   'weights'   - Quadrature weights (numeric vector), same size as nodes.
             %   'type'      - Quadrature rule type ('GaussLegendre' or 'GaussLobatto'). (default: 'GaussLegendre')
             %   'gk'        - Number of quadrature points (integer, >= 2). (default: 5)
             %
@@ -59,8 +59,8 @@ classdef Quad
             if ~isempty(args.nodes) && ~isempty(args.weights)
                 % Manual nodes & weights mode
 
-                assert(numel(args.nodes) == numel(args.weights), ...
-                'nodes and weights must have the same length.');
+                assert(isequal(size(args.nodes), size(args.weights)), ...
+                'nodes and weights must have the same size.');
 
                 obj.nodes = args.nodes(:);
                 obj.weights = args.weights(:);

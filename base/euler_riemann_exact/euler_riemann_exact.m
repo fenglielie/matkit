@@ -163,7 +163,7 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     u_out = zeros(size(xlist));
     p_out = zeros(size(xlist));
 
-    for i = 1:length(xi)
+    for i = 1:numel(xi)
 
         if xi(i) <= w_1_l % Left of the 1-wave
             rho_out(i) = rho_l;
