@@ -8,7 +8,7 @@ end
 function testDefaultConstructor(testCase)
     % Test default constructor
     q = Quad();
-    verifyClass(testCase, q, "Quad");
+    verifyClass(testCase, q, 'Quad');
     verifyEqual(testCase, numel(q.nodes), 5);
     verifyEqual(testCase, numel(q.weights), 5);
 end
@@ -16,7 +16,7 @@ end
 function testGaussLegendreConstructor(testCase)
     % Test rule-based constructor with parameters
     q = Quad('type', 'GaussLegendre', 'gk', 7);
-    verifyClass(testCase, q, "Quad");
+    verifyClass(testCase, q, 'Quad');
     verifyEqual(testCase, numel(q.nodes), 7);
     verifyEqual(testCase, numel(q.weights), 7);
 end
@@ -26,7 +26,7 @@ function testManualNodesWeightsConstructor(testCase)
     nodes = [-0.5; 0.5];
     weights = [1; 1];
     q = Quad('nodes', nodes, 'weights', weights);
-    verifyClass(testCase, q, "Quad");
+    verifyClass(testCase, q, 'Quad');
     verifyEqual(testCase, q.nodes, nodes);
     verifyEqual(testCase, q.weights, weights);
 end
