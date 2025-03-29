@@ -28,6 +28,24 @@ function handles = easy_plot(x, y, varargin)
     %   x2 = linspace(0, 10, 200);
     %   easy_plot({x1, x2}, {sin(x1), cos(x2)}, Title='Sine and Cosine Waves', ...
     %       XLabel='x', YLabel='y', Legend={'sin(x)', 'cos(x)'});
+    %
+    % NOTE:
+    %
+    %   The following operations can be performed on the handles returned by easy_plot:
+    %
+    % |      Operation       |                         Code Example                         |
+    % | :------------------: | :----------------------------------------------------------: |
+    % |     Change Color     |                  `handles(1).Color = 'r';`                   |
+    % |   Change LineStyle   |                `handles(1).LineStyle = '--';`                |
+    % |   Change LineWidth   |                 `handles(1).LineWidth = 2;`                  |
+    % |    Change Marker     |                  `handles(1).Marker = 'o';`                  |
+    % | Change MarkerIndices |  `handles(1).MarkerIndices = 1:5:numel(handles(1).XData);`   |
+    % |       Get Data       |   `x_data = handles(1).XData; y_data = handles(1).YData;`    |
+    % |   Hide/Show Curve    | `handles(1).Visible = 'off';` / `handles(1).Visible = 'on';` |
+    % |    Change Legend     |        `handles(1).DisplayName = 'New Name'; legend;`        |
+    % |     Delete Curve     |                    `delete(handles(1));`                     |
+    % |     Update Data      |    `handles(1).XData = new_x; handles(1).YData = new_y;`     |
+
 
     p = inputParser;
     addRequired(p, 'x'); % x data
