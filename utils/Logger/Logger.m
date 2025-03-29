@@ -291,21 +291,25 @@ classdef Logger < handle
 
         function set_global_level_info()
             % Set global log level to INFO
+
             Logger.global_level_accessor(Logger.INFO);
         end
 
         function set_global_level_warn()
             % Set global log level to WARN
+
             Logger.global_level_accessor(Logger.WARN);
         end
 
         function set_global_level_error()
             % Set global log level to ERROR
+
             Logger.global_level_accessor(Logger.ERROR);
         end
 
         function reset_global_level()
             % Reset global log level to default (default: INFO)
+
             Logger.global_level_accessor(Logger.INFO);
         end
 

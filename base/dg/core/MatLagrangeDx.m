@@ -6,9 +6,9 @@ classdef MatLagrangeDx < MatBase
     %
     % EXAMPLE:
     %   points = [-1, 0, 1];
-    %   basis = MatLagrangeDx(points);
+    %   basis_dx = MatLagrangeDx(points);
     %   x = linspace(-1, 1, 10);
-    %   du = basis.eval(x);
+    %   du = basis_dx.eval(x, length(points)); % size = (3, 10)
 
     methods
 
@@ -21,7 +21,7 @@ classdef MatLagrangeDx < MatBase
             %   x_points    - A vector of points where the Lagrange polynomials are constructed.
             %
             % EXAMPLE:
-            %   basis = MatLagrangeDx([-1, 0, 1]);
+            %   basis_dx = MatLagrangeDx([-1, 0, 1]);
 
             if ~isvector(x_points) || length(x_points) < 2
                 error('MatLagrangeDx:InvalidInput', 'x_points must be a vector with at least two elements.');

@@ -5,9 +5,9 @@ classdef MatLegendreDx < MatBase
     %   obj = MatLegendreDx(n) - Generates the first 'n' Legendre polynomial derivatives.
     %
     % EXAMPLE:
-    %   basis = MatLegendreDx(5);
+    %   basis_dx = MatLegendreDx(5);
     %   x = linspace(-1, 1, 10);
-    %   u = basis.eval(x, 5);
+    %   u = basis_dx.eval(x, 5); % size = (5, 10)
     %
     % NOTE:
     %   p0(x) = 1
@@ -27,7 +27,7 @@ classdef MatLegendreDx < MatBase
             %   n       - Number of Legendre polynomials to generate.
             %
             % EXAMPLE:
-            %   basis = MatLegendreDx(5);
+            %   basis_dx = MatLegendreDx(5);
 
             if ~isscalar(n) || n < 1 || round(n) ~= n
                 error('MatLegendreDx:InvalidInput', 'n must be a positive integer.');

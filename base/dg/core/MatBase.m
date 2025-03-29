@@ -42,8 +42,9 @@ classdef MatBase < handle
             %
             % OUTPUT:
             %   u   - A matrix containing function values.
-            %           - If x is a column vector (m, 1), returns an (m, n) matrix.
-            %           - If x is a row vector (1, m), returns an (n, m) matrix.
+            %           - If x is a scalar (1, 1), return a (n, 1) column vector.
+            %           - If x is a row vector (1, m), return a (n, m) matrix.
+            %           - If x is a column vector (m, 1), return a (m, n) matrix.
             %
             % EXAMPLE:
             %   funcs = {@(x) x, @(x) x.^2, @(x) x.^3};
