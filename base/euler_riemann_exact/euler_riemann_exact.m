@@ -13,48 +13,30 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     %   rho_r  - Right state density (must be positive)
     %   u_r    - Right state velocity
     %   p_r    - Right state pressure (must be positive)
-    %   gamma  - Specific heat ratio (optional, default = 1.4, must be > 1)
-    %   xlist  - Array of spatial positions (optional, default = linspace(-1.0, 1.0, 1000))
-    %   x_c    - Contact discontinuity location (optional, default = 0.0)
-    %   t      - Time at which to compute the solution (optional, default based on CFL condition)
+    %   gamma  - Specific heat ratio (= 1.4)
+    %   xlist  - Array of spatial positions
+    %   x_c    - Contact discontinuity location
+    %   t      - Time at which to compute the solution
     %
     % OUTPUT:
-    %   rho_out - Density distribution at given positions
-    %   u_out   - Velocity distribution at given positions
-    %   p_out   - Pressure distribution at given positions
+    %   rho_out - Density distribution at given positions, same size as xlist
+    %   u_out   - Velocity distribution at given positions, same size as xlist
+    %   p_out   - Pressure distribution at given positions, same size as xlist
     %   more_info - Structure containing additional solution details:
     %               - p_s, u_s, rho_s_l, rho_s_r (intermediate states)
     %               - Wave speeds (w_1_l, w_1_r, w_2, w_3_l, w_3_r)
     %               - Wave types (shock or rarefaction)
 
-    assert(rho_l > 0, 'rho_l must be positive.');
-    assert(p_l > 0, 'p_l must be positive.');
-    assert(rho_r > 0, 'rho_r must be positive.');
-    assert(p_r > 0, 'p_r must be positive.');
-
-    if nargin < 7 || isempty(gamma)
-        gamma = 1.4;
-    end
-
-    assert(gamma > 1, 'gamma must be greater than 1.');
-
-    if nargin < 8 || isempty(xlist)
-        xlist = linspace(-1.0, 1.0, 1000);
-    end
-
-    assert(isvector(xlist), 'xlist must be a vector.');
-
-    if nargin < 9 || isempty(x_c)
-        x_c = 0.0;
-    end
-
+    assert(isnumeric(rho_l) && isscalar(rho_l) && rho_l > 0, 'rho_l must be positive.');
+    assert(isnumeric(u_l) && isscalar(u_l), 'u_l must be a scalar.');
+    assert(isnumeric(p_l) && isscalar(p_l) && p_l > 0, 'p_l must be positive.');
+    assert(isnumeric(rho_r) && isscalar(rho_r) && rho_r > 0, 'rho_r must be positive.');
+    assert(isnumeric(u_r) && isscalar(u_r), 'u_r must be a scalar.');
+    assert(isnumeric(p_r) && isscalar(p_r) && p_r > 0, 'p_r must be positive.');
+    assert(isnumeric(gamma) && isscalar(gamma) && gamma > 1, 'gamma must be greater than 1.');
+    assert(isnumeric(xlist) && isvector(xlist), 'xlist must be a vector.');
     assert(isnumeric(x_c) && isscalar(x_c), 'x_c must be a scalar.');
-
-    if nargin < 10 || isempty(t)
-        t = 0.8 * max(abs(xlist - x_c)) / max(abs([u_l, u_r]));
-    end
-
-    assert(t >= 0, 't must be non-negative.');
+    assert(isnumeric(t) && isscalar(t) && t >= 0, 't must be non-negative.');
 
     % Compute the sound speeds in the left and right states
     c_l = sqrt(gamma * p_l / rho_l);
@@ -159,39 +141,40 @@ function [rho_out, u_out, p_out, more_info] = euler_riemann_exact( ...
     p_1_fan = p_l * (rho_1_fan / rho_l) .^ gamma;
     p_3_fan = p_r * (rho_3_fan / rho_r) .^ gamma;
 
-    rho_out = zeros(size(xlist));
-    u_out = zeros(size(xlist));
-    p_out = zeros(size(xlist));
+    % Default: Right state
+    rho_out = rho_r * ones(size(xlist));
+    u_out = u_r * ones(size(xlist));
+    p_out = p_r * ones(size(xlist));
 
-    for i = 1:numel(xi)
+    % Left of the 1-wave: Left state
+    idx_1_l = (xi <= w_1_l);
+    rho_out(idx_1_l) = rho_l;
+    u_out(idx_1_l) = u_l;
+    p_out(idx_1_l) = p_l;
 
-        if xi(i) <= w_1_l % Left of the 1-wave
-            rho_out(i) = rho_l;
-            u_out(i) = u_l;
-            p_out(i) = p_l;
-        elseif xi(i) <= w_1_r % Inside the 1-wave (if it's a rarefaction wave)
-            rho_out(i) = rho_1_fan(i);
-            u_out(i) = u_1_fan(i);
-            p_out(i) = p_1_fan(i);
-        elseif xi(i) <= w_2 % Between the 1-wave and the 2-wave
-            rho_out(i) = rho_s_l;
-            u_out(i) = u_s;
-            p_out(i) = p_s;
-        elseif xi(i) <= w_3_l % Between the 2-wave and the 3-wave
-            rho_out(i) = rho_s_r;
-            u_out(i) = u_s;
-            p_out(i) = p_s;
-        elseif xi(i) <= w_3_r % Inside the 3-wave (if it's a rarefaction wave)
-            rho_out(i) = rho_3_fan(i);
-            u_out(i) = u_3_fan(i);
-            p_out(i) = p_3_fan(i);
-        else % Right of the 3-wave
-            rho_out(i) = rho_r;
-            u_out(i) = u_r;
-            p_out(i) = p_r;
-        end
+    % Inside the 1-wave (if it's a rarefaction wave)
+    idx_1_r = (xi > w_1_l) & (xi <= w_1_r);
+    rho_out(idx_1_r) = rho_1_fan(idx_1_r);
+    u_out(idx_1_r) = u_1_fan(idx_1_r);
+    p_out(idx_1_r) = p_1_fan(idx_1_r);
 
-    end
+    % Between the 1-wave and the 2-wave
+    idx_2 = (xi > w_1_r) & (xi <= w_2);
+    rho_out(idx_2) = rho_s_l;
+    u_out(idx_2) = u_s;
+    p_out(idx_2) = p_s;
+
+    % Between the 2-wave and the 3-wave
+    idx_3_l = (xi > w_2) & (xi <= w_3_l);
+    rho_out(idx_3_l) = rho_s_r;
+    u_out(idx_3_l) = u_s;
+    p_out(idx_3_l) = p_s;
+
+    % Inside the 3-wave (if it's a rarefaction wave)
+    idx_3_r = (xi > w_3_l) & (xi <= w_3_r);
+    rho_out(idx_3_r) = rho_3_fan(idx_3_r);
+    u_out(idx_3_r) = u_3_fan(idx_3_r);
+    p_out(idx_3_r) = p_3_fan(idx_3_r);
 
     % Additional info
     more_info = struct();

@@ -29,18 +29,17 @@ function [fig, ax] = euler_riemann_exact_plot( ...
     %        0.125, 0.0, 0.1, ...
     %        0.0, 1.0, 0.5, 0.25);
 
-    assert(rho_l > 0, 'rho_l must be positive.');
-    assert(p_l > 0, 'p_l must be positive.');
-    assert(rho_r > 0, 'rho_r must be positive.');
-    assert(p_r > 0, 'p_r must be positive.');
-    assert(x_r > x_l, 'x_r must be greater than x_l.');
-    assert(t >= 0, 't must be non-negative.');
-
-    if nargin < 10 || isempty(x_c)
-        x_c = 0.0;
-    end
-
+    assert(isnumeric(rho_l) && isscalar(rho_l) && rho_l > 0, 'rho_l must be positive.');
+    assert(isnumeric(u_l) && isscalar(u_l), 'u_l must be a scalar.');
+    assert(isnumeric(p_l) && isscalar(p_l) && p_l > 0, 'p_l must be positive.');
+    assert(isnumeric(rho_r) && isscalar(rho_r) && rho_r > 0, 'rho_r must be positive.');
+    assert(isnumeric(u_r) && isscalar(u_r), 'u_r must be a scalar.');
+    assert(isnumeric(p_r) && isscalar(p_r) && p_r > 0, 'p_r must be positive.');
+    assert(isnumeric(x_l) && isscalar(x_l), 'x_l must be a scalar.');
+    assert(isnumeric(x_r) && isscalar(x_r), 'x_r must be a scalar.');
     assert(isnumeric(x_c) && isscalar(x_c), 'x_c must be a scalar.');
+    assert(x_l < x_c && x_c < x_r, 'x_l < x_c < x_r.');
+    assert(isnumeric(t) && isscalar(t) && t >= 0, 't must be non-negative.');
 
     xlist = linspace(x_l, x_r, 1000);
 
