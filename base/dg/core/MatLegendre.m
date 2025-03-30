@@ -29,7 +29,7 @@ classdef MatLegendre < MatBase
             % EXAMPLE:
             %   basis = MatLegendre(5);
 
-            if ~isscalar(n) || n < 1 || round(n) ~= n
+            if ~isscalar(n) || n < 1 || mod(n, 1) ~= 0
                 error('MatLegendre:InvalidInput', 'n must be a positive integer.');
             end
 

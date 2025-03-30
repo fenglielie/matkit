@@ -21,7 +21,7 @@ function result = order(xlist, ylist)
 
     assert(isvector(xlist) && isnumeric(xlist), 'xlist must be a numeric vector.');
     assert(isvector(ylist) && isnumeric(ylist), 'ylist must be a numeric vector.');
-    assert(all(size(xlist) == size(ylist)), 'xlist and ylist must have the same size.');
+    assert(isequal(size(xlist), size(ylist)), 'xlist and ylist must have the same size.');
     assert(numel(xlist) >= 2, 'xlist and ylist must have at least two elements.');
 
     num = numel(xlist) - 1;

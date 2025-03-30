@@ -16,8 +16,8 @@ function show_results(nums, error_l1, error_l2, error_inf)
     assert(isvector(error_l1) && isnumeric(error_l1), 'error_l1 must be a numeric vector.');
     assert(isvector(error_l2) && isnumeric(error_l2), 'error_l2 must be a numeric vector.');
     assert(isvector(error_inf) && isnumeric(error_inf), 'error_inf must be a numeric vector.');
-    assert(numel(nums) == numel(error_l1) && numel(nums) == numel(error_l2) && numel(nums) == numel(error_inf), ...
-    'All input vectors must have the same numel.');
+    assert(isequal(size(nums), size(error_l1), size(error_l2), size(error_inf)), ...
+    'All input vectors must have the same size.');
     assert(all(nums > 0), 'nums must contain only positive values.');
     assert(all(error_l1 > 0) && all(error_l2 > 0) && all(error_inf > 0), ...
     'Error values must be positive.');

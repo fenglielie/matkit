@@ -94,7 +94,7 @@ classdef Quad
             %
             % INPUT:
             %   f           - Function handle @(x) to integrate.
-            %   xleft       - Left integration boundary. row or column vector
+            %   xleft       - Left integration boundary.
             %   xright      - Right integration boundary. same size as xleft
             %
             % OUTPUT:
@@ -111,32 +111,21 @@ classdef Quad
             assert(isa(f, 'function_handle'), 'f must be a function handle.');
             assert(isnumeric(xleft) && isnumeric(xright), ...
             'xleft and xright must be numeric vectors.');
-            assert(isvector(xleft) && isvector(xright), ...
-            'xleft and xright must be vectors.');
             assert(isequal(size(xleft), size(xright)), ...
             'xleft and xright must have the same size.');
 
-            if iscolumn(xleft)
-                output_col = true;
-                xleft = xleft.';
-                xright = xright.';
-            else
-                output_col = false;
-            end
+            input_size = size(xleft);
+            xleft = xleft(:)'; % size = [1, n]
+            xright = xright(:)'; % size = [1, n]
 
             half_width = (xright - xleft) ./ 2; % size = [1, n]
             mid_point = (xleft + xright) ./ 2; % size = [1, n]
 
             nodes_local = mid_point + half_width .* obj.nodes; % size = [gk, n]
-            integral_row = half_width .* sum(obj.weights .* f(nodes_local)); % size = [1, n]
+            integral_row = half_width .* sum(obj.weights .* f(nodes_local), 1); % size = [1, n]
 
             % reshape output
-            if output_col
-                result = integral_row.';
-            else
-                result = integral_row;
-            end
-
+            result = reshape(integral_row, input_size);
         end
 
     end

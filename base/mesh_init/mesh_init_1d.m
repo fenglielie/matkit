@@ -21,7 +21,7 @@ function [x, dx] = mesh_init_1d(xleft, xright, n)
     assert(isnumeric(xleft) && isscalar(xleft), 'xleft must be a numeric scalar.');
     assert(isnumeric(xright) && isscalar(xright), 'xright must be a numeric scalar.');
     assert(xleft < xright, 'xleft must be less than xright.');
-    assert(isnumeric(n) && isscalar(n) && n == floor(n) && n > 0, 'n must be a positive integer.');
+    assert(isnumeric(n) && isscalar(n) && mod(n, 1) == 0 && n > 0, 'n must be a positive integer.');
 
     x = linspace(xleft, xright, n + 1);
     dx = x(2) - x(1);
