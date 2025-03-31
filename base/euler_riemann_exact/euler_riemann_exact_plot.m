@@ -1,4 +1,4 @@
-function [fig, ax] = euler_riemann_exact_plot( ...
+function euler_riemann_exact_plot( ...
         rho_l, u_l, p_l, rho_r, u_r, p_r, x_l, x_r, x_c, t)
     % EULER_RIEMANN_EXACT_PLOT Plots the exact solution of the Euler Riemann problem.
     %
@@ -18,10 +18,6 @@ function [fig, ax] = euler_riemann_exact_plot( ...
     %   x_r    - Right boundary of spatial domain (must be greater than x_l)
     %   x_c    - Initial location of the contact discontinuity (optional, default = 0.0)
     %   t      - Time at which to compute the solution (must be non-negative)
-    %
-    % OUTPUT:
-    %   fig - Handle to the figure containing primitive variable profiles.
-    %   ax  - Handle to the axes of the space-time diagram.
     %
     % EXAMPLE:
     %   euler_riemann_exact_plot(...
@@ -53,7 +49,7 @@ function [fig, ax] = euler_riemann_exact_plot( ...
     primitive = {rho, u, p, e};
     names = {'Density', 'Velocity', 'Pressure', 'Internal Energy'};
 
-    fig = figure;
+    figure;
 
     for w = 1:4
         subplot(2, 2, w);
