@@ -225,6 +225,7 @@ classdef Logger < handle
 
         function log(obj, level, fmt, varargin)
             msg = sprintf(fmt, varargin{:});
+            msg = strrep(msg, '%', '%%');
             logStr = obj.format_log(level, msg);
 
             if obj.fileID ~= -1
@@ -280,6 +281,7 @@ classdef Logger < handle
 
         function level = get_global_level()
             % Get the global log level.
+
             level = Logger.global_level_accessor();
         end
 

@@ -10,7 +10,7 @@ logger1 = Logger(level = Logger.DEBUG, format = 'level');
 
 logger1.debug('Processing item %d of %d...', 5, 100);
 logger1.info('User %s has logged in', 'Alice');
-logger1.warn('Disk space low: %0.2f G remaining', 4.75);
+logger1.warn('Disk space low: %0.2f%% remaining', 4.75);
 logger1.error('Failed to open file: %s', 'data.csv');
 % logger1.error_plus('Disk space low: %0.2f G remaining', 4.75);
 
