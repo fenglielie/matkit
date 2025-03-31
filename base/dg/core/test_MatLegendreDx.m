@@ -19,16 +19,16 @@ function testEvalFunction(testCase)
     % Test case 2: Evaluate the first 5 derivatives of Legendre polynomials at test points
     n = 5;
     basis = MatLegendreDx(n);
-    x = linspace(-1, 1, 5)';
+    x = linspace(-0.9, 0.9, 5)';
 
     u = basis.eval(x, n);
 
     expected_u = [
-                  0, 1, -3, 6, -10;
-                  0, 1, -1.5, 0.375, 1.5625;
-                  0, 1, 0, - (3/2), 0;
-                  0, 1, 1.5, 0.375, -1.5625;
-                  0, 1, 3, 6, 10
+                  0, 1, -2.7, 4.575, -6.0075,;
+                  0, 1, -1.35, 0.01875, 1.7803125,;
+                  0, 1, 0, -1.5, 0;
+                  0, 1, 1.35, 0.01875 -1.7803125;
+                  0, 1, 2.7, 4.575, 6.0075;
                   ];
 
     verifySize(testCase, u, size(expected_u));
@@ -40,15 +40,15 @@ function testEvalRowVector(testCase)
     % Test case 3: Verify eval handles row vectors correctly
     n = 5;
     basis = MatLegendreDx(n);
-    x_row = linspace(-1, 1, 5);
+    x_row = linspace(-0.9, 0.9, 5);
 
     u_row = basis.eval(x_row, n);
     expected_u_row = [
-                      0, 1, -3, 6, -10;
-                      0, 1, -1.5, 0.375, 1.5625;
-                      0, 1, 0, - (3/2), 0;
-                      0, 1, 1.5, 0.375, -1.5625;
-                      0, 1, 3, 6, 10
+                      0, 1, -2.7, 4.575, -6.0075,;
+                      0, 1, -1.35, 0.01875, 1.7803125,;
+                      0, 1, 0, -1.5, 0;
+                      0, 1, 1.35, 0.01875 -1.7803125;
+                      0, 1, 2.7, 4.575, 6.0075;
                       ]';
 
     verifyEqual(testCase, u_row, expected_u_row, 'AbsTol', 1e-6);

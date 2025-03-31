@@ -53,28 +53,6 @@ classdef MatLegendre < MatBase
             % OUTPUT:
             %   funcs   - Cell array of function handles
 
-            % funcs = cell(1, n);
-            %
-            % % Define symbolic variable for computing polynomials
-            % syms x;
-            % P = sym(zeros(1, n)); % Symbolic storage
-            %
-            % % Compute first two polynomials manually
-            % P(1) = 1;
-            % if n > 1
-            %     P(2) = x;
-            % end
-            %
-            % % Compute remaining polynomials using recurrence relation
-            % for k = 3:n
-            %     P(k) = ((2*k - 3) * x * P(k-1) - (k - 2) * P(k-2)) / (k - 1);
-            % end
-            %
-            % % Convert symbolic expressions to function handles
-            % for k = 1:n
-            %     funcs{k} = matlabFunction(P(k), 'Vars', x);
-            % end
-
             funcs = cell(1, n);
 
             for k = 1:n

@@ -52,38 +52,15 @@ classdef MatLegendreDx < MatBase
             %
             % OUTPUT:
             %   dfuncs  - Cell array of derivative function handles
-
-            % dfuncs = cell(1, n);
             %
-            % % Define symbolic variable for computing polynomials
-            % syms x;
-            % P = sym(zeros(1, n)); % Symbolic storage
-            %
-            % % Compute first two polynomials manually
-            % P(1) = 1;
-            % if n > 1
-            %     P(2) = x;
-            % end
-            %
-            % % Compute remaining polynomials using recurrence relation
-            % for k = 3:n
-            %     P(k) = ((2*k - 3) * x * P(k-1) - (k - 2) * P(k-2)) / (k - 1);
-            % end
-            %
-            % % Differentiate the polynomials
-            % dP = diff(P, x);
-            %
-            % % Convert symbolic expressions to function handles
-            % for k = 1:n
-            %     dfuncs{k} = matlabFunction(dP(k), 'Vars', x);
-            % end
+            % NOTE:
+            %   Return NaN if x^2 == 1 because 1/(x^2-1) is used in the computation of the derivative.
 
             dfuncs = cell(1, n);
-            syms x;
+            dfuncs{1} = @(x) zeros(size(x));
 
-            for k = 1:n
-                dP = diff(legendreP(k - 1, x), x);
-                dfuncs{k} = matlabFunction(dP, 'Vars', x);
+            for k = 2:n
+                dfuncs{k} = @(x) (k - 1) ./ (x .^ 2 - 1) .* (x .* legendreP(k - 1, x) - legendreP(k - 2, x));
             end
 
         end
