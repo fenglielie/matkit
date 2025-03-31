@@ -3,8 +3,7 @@ clear;
 close all;
 
 cd(fileparts(mfilename('fullpath')));
-run('../../base/setup.m')
-run('../../utils/setup.m')
+run('../../setup.m')
 
 alpha = 1;
 beta = 0.2;
