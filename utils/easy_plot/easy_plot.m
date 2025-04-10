@@ -46,7 +46,6 @@ function handles = easy_plot(x, y, varargin)
     % |     Delete Curve     |                    `delete(handles(1));`                     |
     % |     Update Data      |    `handles(1).XData = new_x; handles(1).YData = new_y;`     |
 
-
     p = inputParser;
     addRequired(p, 'x'); % x data
     addRequired(p, 'y'); % y data
@@ -144,7 +143,8 @@ function handles = easy_plot(x, y, varargin)
 
     % Set legend if provided
     if ~isempty(LegendStr) && numel(LegendStr) == numCurves
-        legend(LegendStr, 'Location', 'best');
+        legend_handle = legend(LegendStr, 'Location', 'best');
+        legend_handle.Box = 'off';
     end
 
     % Automatically save the plot if 'SaveAs' is specified
