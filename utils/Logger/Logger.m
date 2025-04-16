@@ -4,7 +4,7 @@ classdef Logger < handle
     % Logger Properties:
     %   level                       - Minimum log level to record (default: INFO)
     %   fileID                      - File handle for logging (-1 indicates no file output)
-    %   format                      - Log message format: 'none', 'level', 'timestamp_and_level'
+    %   format                      - Log message format: 'none', 'level', 'timestamp', 'timestamp_and_level'
     %
     % Logger Methods:
     %  (1) Constructor and Controls over logger (return obj)
@@ -69,7 +69,7 @@ classdef Logger < handle
             %
             % Key-Value Parameters:
             %   level  - Minimum log level: DEBUG < INFO < WARN < ERROR. (default: Logger.INFO)
-            %   format - Log format: 'none', 'level', 'timestamp_and_level'. (default: 'level')
+            %   format - Log format: 'none', 'level', 'timestamp', 'timestamp_and_level'. (default: 'level')
             %
             % EXAMPLE:
             %   logger1 = Logger();
@@ -79,7 +79,7 @@ classdef Logger < handle
             p = inputParser;
             addParameter(p, 'level', Logger.INFO, ...
                 @(x) isnumeric(x) && isscalar(x) && ismember(x, validLevels));
-            addParameter(p, 'format', 'level', @(x) ismember(x, {'none', 'level', 'timestamp_and_level'}));
+            addParameter(p, 'format', 'level', @(x) ismember(x, {'none', 'level', 'timestamp',  'timestamp_and_level'}));
             parse(p, varargin{:});
 
             obj.level = p.Results.level;
@@ -114,7 +114,7 @@ classdef Logger < handle
             validFormats = {'none', 'level', 'timestamp_and_level'};
 
             if ~ismember(format, validFormats)
-                error('Logger:InvalidFormat', 'Invalid log format. Supported log formats: ''none'', ''level'', ''timestamp_and_level''.');
+                error('Logger:InvalidFormat', 'Invalid log format. Supported log formats: ''none'', ''level'', ''timestamp'', ''timestamp_and_level''.');
             end
 
             obj.format = format;
@@ -250,6 +250,8 @@ classdef Logger < handle
                     str = sprintf('%s\n', msg);
                 case 'level'
                     str = sprintf('[%s] %s\n', levelStr, msg);
+                case 'timestamp'
+                    str = sprintf('[%s] %s\n', Logger.get_timestamp(), msg);
                 case 'timestamp_and_level'
                     str = sprintf('[%s] [%s] %s\n', Logger.get_timestamp(), levelStr, msg);
             end
