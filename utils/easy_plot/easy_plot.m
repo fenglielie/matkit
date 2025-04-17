@@ -149,7 +149,17 @@ function handles = easy_plot(x, y, varargin)
 
     % Automatically save the plot if 'SaveAs' is specified
     if ~isempty(SaveAsFile)
-        [~, ~, ext] = fileparts(SaveAsFile); % Get file extension
+        [folder, ~, ext] = fileparts(SaveAsFile); % Get file extension
+
+        % Create the parent folder if it doesn't exist
+        if ~isempty(folder) && ~isfolder(folder)
+            mkdir(folder);
+
+            if ~SilentSave
+                fprintf('Parent folder created: %s\n', folder);
+            end
+
+        end
 
         switch lower(ext)
             case '.fig'
