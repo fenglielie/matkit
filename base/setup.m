@@ -12,3 +12,5 @@ addpath('./gauss_quadrature')
 addpath('./mesh_init')
 
 addpath('./weno')
+
+addpath('./tvd_tvb')
