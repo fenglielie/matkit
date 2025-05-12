@@ -53,7 +53,7 @@ nx_ref = 320;
 [x_ref, dx_ref] = mesh_init_1d(xleft, xright, nx_ref);
 
 exact_ref_func = @(s) eulereqs_sin_exact(s, t2, alpha, beta, omega, phi, u0_ic, p0_ic);
-u_exact_ref = dg_projection_eqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis, dim);
+% u_exact_ref = dg_projection_eqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis, dim);
 
 figure;
 hold on
@@ -67,12 +67,10 @@ for w = 1:2
 
     v = basis.eval(0, pk + 1); % column vector
 
-    rho_mean_values_ref = v' * u_exact_ref(1:(pk + 1), :);
+    [rho_values_ref, ~, ~] = exact_ref_func(x_ref);
 
-    rho_values = v' * uh(1:(pk + 1), :);
-
-    plot(x_ref, rho_mean_values_ref)
-    plot(x, rho_values)
+    plot(x_ref, rho_values_ref)
+    plot(x, v' * uh(1:(pk + 1), :))
 end
 
 hold off

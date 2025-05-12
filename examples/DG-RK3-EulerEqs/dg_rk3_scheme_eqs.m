@@ -66,7 +66,7 @@ function u = dg_rk3_scheme_eqs(u, dx, tend, f, fhat, get_alpha, pk, gk, basis, b
         alpha = get_alpha(uh_mid);
         global_alpha = max(alpha);
 
-        dt = 1 / ((2 * pk + 3) * global_alpha) * dx ^ (max((pk + 1) / 3, 1));
+        dt = 1 / ((2 * pk + 1) * global_alpha) * dx ^ (max((pk + 1) / 3, 1));
         dt = min([dt, tend - tnow]);
 
         u1 = u + dt * L_op(u, dx, f, fhat, get_alpha, params);

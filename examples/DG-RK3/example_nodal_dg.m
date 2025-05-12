@@ -48,7 +48,7 @@ nx_ref = 320;
 [x_ref, dx_ref] = mesh_init_1d(xleft, xright, nx_ref);
 
 exact_ref_func = @(s) burgers_sin_exact(s, t2, alpha, beta);
-u_exact_ref = dg_projection(exact_ref_func, x_ref, dx_ref, pk, gk, basis);
+% u_exact_ref = dg_projection(exact_ref_func, x_ref, dx_ref, pk, gk, basis);
 
 figure;
 hold on
@@ -62,7 +62,7 @@ for w = 1:2
 
     v = basis.eval(0, pk + 1); % column vector
 
-    plot(x_ref, v' * u_exact_ref)
+    plot(x_ref, exact_ref_func(x_ref))
     plot(x, v' * uh)
 end
 
