@@ -9,3 +9,5 @@ addpath('./easy_plot')
 addpath('./Logger')
 
 addpath('./Trigger')
+
+addpath('./GlobalState')
