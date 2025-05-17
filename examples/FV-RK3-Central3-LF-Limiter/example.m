@@ -10,7 +10,7 @@ beta = 1;
 xleft = -pi;
 xright = pi;
 
-limiters = {{tvb_limiter(-1), 'nolimiter'}, {tvb_limiter(0), 'tvd'}, {tvb_limiter(0.1), 'tvb 0.1'}, {tvb_limiter(3), 'tvb 3'}};
+limiters = {{false, 'nolimiter'}, {tvd(), 'tvd'}, {tvb(0.5), 'tvb 0.5'}, {tvb(1), 'tvb 1.0'}};
 
 for cnt = 1:numel(limiters)
     lmt = limiters{cnt}{1};
@@ -69,10 +69,15 @@ for cnt = 1:numel(limiters)
     hold off
 end
 
-function result = burgers_fhat_LF(ul, ur, c)
-    result = 0.25 * (ul .^ 2 + ur .^ 2) - (0.5 * c) .* (ur - ul);
-end
-
 function result = burgers_df(u)
     result = u;
+end
+
+function result = burgers_get_alpha(ul, ur)
+    result = max(abs(burgers_df(ul)), abs(burgers_df(ur)));
+end
+
+function result = burgers_fhat_LF(ul, ur)
+    alpha = burgers_get_alpha(ul, ur);
+    result = 0.25 * (ul .^ 2 + ur .^ 2) - 0.5 * alpha .* (ur - ul);
 end

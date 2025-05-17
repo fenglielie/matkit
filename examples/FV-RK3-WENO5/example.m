@@ -60,10 +60,15 @@ end
 
 hold off
 
-function result = burgers_fhat_LF(ul, ur, c)
-    result = 0.25 * (ul .^ 2 + ur .^ 2) - (0.5 * c) .* (ur - ul);
-end
-
 function result = burgers_df(u)
     result = u;
+end
+
+function result = burgers_get_alpha(ul, ur)
+    result = max(abs(burgers_df(ul)), abs(burgers_df(ur)));
+end
+
+function result = burgers_fhat_LF(ul, ur)
+    alpha = burgers_get_alpha(ul, ur);
+    result = 0.25 * (ul .^ 2 + ur .^ 2) - 0.5 * alpha .* (ur - ul);
 end

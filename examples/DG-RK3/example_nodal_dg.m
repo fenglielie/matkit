@@ -11,8 +11,8 @@ beta = 1;
 xleft = -pi;
 xright = pi;
 
-pk = 3; % Pk
-gk = 8; % Gauss Points
+pk = 1; % Pk
+gk = 7; % Gauss Points
 
 [points, ~] = gauss_lobatto(pk + 1);
 basis = MatLagrange(points);
@@ -68,14 +68,19 @@ end
 
 hold off
 
-function result = burgers_fhat_LF(ul, ur, c)
-    result = 0.25 * (ul .^ 2 + ur .^ 2) - (0.5 * c) .* (ur - ul);
-end
-
 function result = burgers_df(u)
     result = u;
 end
 
 function result = burgers_f(u)
     result = 0.5 * u .^ 2;
+end
+
+function result = burgers_get_alpha(ul, ur)
+    result = max(abs(burgers_df(ul)), abs(burgers_df(ur)));
+end
+
+function result = burgers_fhat_LF(ul, ur)
+    alpha = burgers_get_alpha(ul, ur);
+    result = 0.25 * (ul .^ 2 + ur .^ 2) - 0.5 * alpha .* (ur - ul);
 end

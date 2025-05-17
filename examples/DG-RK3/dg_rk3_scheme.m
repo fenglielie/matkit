@@ -55,9 +55,9 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
         dt = 1 / ((2 * pk + 1) * max(abs(df(uh_mid)))) * dx ^ (max((pk + 1) / 3, 1));
         dt = min([dt, tend - tnow]);
 
-        u1 = u + dt * L_op(u, dx, f, fhat, df, params);
-        u2 = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, df, params));
-        u3 = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, df, params));
+        u1 = u + dt * L_op(u, dx, f, fhat, params);
+        u2 = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, params));
+        u3 = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, params));
         u = u3;
 
         tnow = tnow + dt;
@@ -65,16 +65,13 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
 
 end
 
-function result = L_op(u, dx, f, fhat, df, params)
+function result = L_op(u, dx, f, fhat, params)
 
     ul = params.vl' * u; % row vector
     ur = params.vr' * u;
 
-    lf_alpha = max([circshift(abs(df(ur)), 1); abs(df(ul))]);
-    rf_alpha = max([abs(df(ur)); circshift(abs(df(ul)), -1)]);
-
-    fhat_l = fhat(circshift(ur, 1), ul, lf_alpha);
-    fhat_r = fhat(ur, circshift(ul, -1), rf_alpha);
+    fhat_l = fhat(circshift(ur, 1), ul);
+    fhat_r = fhat(ur, circshift(ul, -1));
 
     main = dx / 2 * (params.DM') * params.W * f(params.M * u);
     left_boundary = params.vl * fhat_l;

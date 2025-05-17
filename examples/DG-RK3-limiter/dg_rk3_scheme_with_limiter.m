@@ -12,7 +12,7 @@ function u = dg_rk3_scheme_with_limiter(u, dx, tend, f, fhat, df, pk, gk, basis,
     %   gk        - Number of Gauss quadrature points, must be a positive integer.
     %   basis     - Basis function object, must be an instance of MatBase or its subclass.
     %   basis_dx  - Derivative of the basis function object, must be an instance of MatBase or its subclass.
-    %   limiter   - Limiter function handle.
+    %   limiter   - Limiter function handle or false.
     %
     % OUTPUT:
     %   u         - Numerical solution at final time.
@@ -50,7 +50,7 @@ function u = dg_rk3_scheme_with_limiter(u, dx, tend, f, fhat, df, pk, gk, basis,
     params.vc = vc;
     params.vr = vr;
 
-    if isequal(limiter, false)
+    if isequal(limiter, false) || pk == 0
         post_precessor = @(u) u;
     else
         post_precessor = dg_limiter(limiter, pk, gk, dx, basis);
@@ -63,11 +63,11 @@ function u = dg_rk3_scheme_with_limiter(u, dx, tend, f, fhat, df, pk, gk, basis,
         dt = 1 / ((2 * pk + 1) * max(abs(df(uh_mid)))) * dx ^ (max((pk + 1) / 3, 1));
         dt = min([dt, tend - tnow]);
 
-        u1_pre = u + dt * L_op(u, dx, f, fhat, df, params);
+        u1_pre = u + dt * L_op(u, dx, f, fhat, params);
         u1 = post_precessor(u1_pre);
-        u2_pre = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, df, params));
+        u2_pre = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, params));
         u2 = post_precessor(u2_pre);
-        u3_pre = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, df, params));
+        u3_pre = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, params));
         u3 = post_precessor(u3_pre);
 
         u = u3;
@@ -77,16 +77,13 @@ function u = dg_rk3_scheme_with_limiter(u, dx, tend, f, fhat, df, pk, gk, basis,
 
 end
 
-function result = L_op(u, dx, f, fhat, df, params)
+function result = L_op(u, dx, f, fhat, params)
 
     ul = params.vl' * u; % row vector
     ur = params.vr' * u;
 
-    lf_alpha = max([circshift(abs(df(ur)), 1); abs(df(ul))]);
-    rf_alpha = max([abs(df(ur)); circshift(abs(df(ul)), -1)]);
-
-    fhat_l = fhat(circshift(ur, 1), ul, lf_alpha);
-    fhat_r = fhat(ur, circshift(ul, -1), rf_alpha);
+    fhat_l = fhat(circshift(ur, 1), ul);
+    fhat_r = fhat(ur, circshift(ul, -1));
 
     main = dx / 2 * (params.DM') * params.W * f(params.M * u);
     left_boundary = params.vl * fhat_l;
