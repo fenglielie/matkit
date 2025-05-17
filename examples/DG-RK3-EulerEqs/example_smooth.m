@@ -35,7 +35,7 @@ for w = 1:n
 
     init_func = @(s) eulereqs_sin_exact(s, 0, alpha, beta, omega, phi, u0_ic, p0_ic);
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t1, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, false);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t1, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, false, false);
 
     u_exact_func = @(s) eulereqs_sin_exact(s, t1, alpha, beta, omega, phi, u0_ic, p0_ic);
 
@@ -63,7 +63,7 @@ for w = 1:2
 
     init_func = @(s) eulereqs_sin_exact(s, 0, alpha, beta, omega, phi, u0_ic, p0_ic);
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
-    uh = dg_rk3_scheme_eqs(uh0, dx, t2, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, false);
+    uh = dg_rk3_scheme_eqs(uh0, dx, t2, @eulereqs_f, @eulereqs_fhat_LF, @eulereqs_get_alpha, pk, gk, basis, basis_dx, dim, false, false);
 
     v = basis.eval(0, pk + 1); % column vector
 
