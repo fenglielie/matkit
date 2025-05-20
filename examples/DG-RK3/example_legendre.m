@@ -16,10 +16,15 @@ gk = 7; % Gauss Points
 basis = MatLegendre(pk + 1);
 basis_dx = MatLegendreDx(pk + 1);
 
+% limiter = false; % disable limiter
+% limiter = tvd();
+% limiter = tvb(0.5);
+limiter = tvb(1);
+
 %% order test
 
 t1 = 0.5;
-nxlist = [10, 20, 40, 80, 160, 320, 640];
+nxlist = [10, 20, 40, 80, 160, 320];
 n = numel(nxlist);
 errors = zeros(3, n);
 
@@ -28,7 +33,7 @@ for w = 1:n
 
     init_func = @(s) alpha + beta * sin(s);
     uh0 = dg_projection(init_func, x, dx, pk, gk, basis);
-    uh = dg_rk3_scheme(uh0, dx, t1, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, basis, basis_dx);
+    uh = dg_rk3_scheme(uh0, dx, t1, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, basis, basis_dx, limiter);
 
     u_exact_func = @(s) burgers_sin_exact(s, t1, alpha, beta);
 
@@ -56,7 +61,7 @@ for w = 1:2
 
     init_func = @(s) alpha + beta * sin(s);
     uh0 = dg_projection(init_func, x, dx, pk, gk, basis);
-    uh = dg_rk3_scheme(uh0, dx, t2, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, basis, basis_dx);
+    uh = dg_rk3_scheme(uh0, dx, t2, @burgers_f, @burgers_fhat_LF, @burgers_df, pk, gk, basis, basis_dx, limiter);
 
     v = basis.eval(0, pk + 1); % column vector
 

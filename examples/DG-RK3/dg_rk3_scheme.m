@@ -1,4 +1,4 @@
-function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
+function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx, limiter)
     % dg_rk3_scheme
     %
     % INPUT:
@@ -12,6 +12,7 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
     %   gk        - Number of Gauss quadrature points, must be a positive integer.
     %   basis     - Basis function object, must be an instance of MatBase or its subclass.
     %   basis_dx  - Derivative of the basis function object, must be an instance of MatBase or its subclass.
+    %   limiter   - Limiter function handle or false.
     %
     % OUTPUT:
     %   u         - Numerical solution at final time.
@@ -26,6 +27,7 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
     assert(isnumeric(gk) && isscalar(gk) && gk > 0 && mod(gk, 1) == 0, 'gk must be a positive integer.');
     assert(isa(basis, 'MatBase'), 'basis must be an object of class MatBase or its subclass.');
     assert(isa(basis_dx, 'MatBase'), 'basis_dx must be an object of class MatBase or its subclass.');
+    assert(isa(limiter, 'function_handle') || isequal(limiter, false), 'limiter must be a function handle or false.');
 
     assert(2 * gk >= 2 * basis.funcs_num, 'insufficient precision of numerical quadrature formula');
     [points, weights] = gauss_legendre(gk);
@@ -48,6 +50,12 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
     params.vc = vc;
     params.vr = vr;
 
+    if isequal(limiter, false) || pk == 0
+        post_precessor = @(u) u;
+    else
+        post_precessor = dg_limiter(limiter, pk, gk, dx, basis);
+    end
+
     tnow = 0;
 
     while tnow < tend
@@ -55,9 +63,13 @@ function u = dg_rk3_scheme(u, dx, tend, f, fhat, df, pk, gk, basis, basis_dx)
         dt = 1 / ((2 * pk + 1) * max(abs(df(uh_mid)))) * dx ^ (max((pk + 1) / 3, 1));
         dt = min([dt, tend - tnow]);
 
-        u1 = u + dt * L_op(u, dx, f, fhat, params);
-        u2 = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, params));
-        u3 = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, params));
+        u1_pre = u + dt * L_op(u, dx, f, fhat, params);
+        u1 = post_precessor(u1_pre);
+        u2_pre = (3/4) * u + (1/4) * (u1 + dt * L_op(u1, dx, f, fhat, params));
+        u2 = post_precessor(u2_pre);
+        u3_pre = (1/3) * u + (2/3) * (u2 + dt * L_op(u2, dx, f, fhat, params));
+        u3 = post_precessor(u3_pre);
+
         u = u3;
 
         tnow = tnow + dt;
