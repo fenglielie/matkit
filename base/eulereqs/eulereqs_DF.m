@@ -9,7 +9,7 @@ function [L, D, R] = eulereqs_DF(v1, v2, v3)
 
     R = [1, 1, 1;
          u - c, u, u + c;
-         H - u .* c, 0.5 * u .* 2, H + u .* c;
+         H - u .* c, 0.5 * u .^ 2, H + u .* c;
          ];
 
     L = inv(R);

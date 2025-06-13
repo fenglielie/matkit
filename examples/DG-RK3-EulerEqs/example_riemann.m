@@ -13,7 +13,7 @@ gamma = 1.4;
 pk = 2; % Pk
 gk = 5; % Gauss Points
 
-limiter = tvb(2);
+limiter = tvd();
 
 init_func = @(x) eulereqs_riemann_init(x, 1, 0, 1, 0.125, 0, 0.1);
 exact_func = @(x, t) euler_riemann_exact(1, 0, 1, 0.125, 0, 0.1, gamma, x, 0, t);
@@ -27,7 +27,7 @@ basis_dx = MatLegendreDx(pk + 1);
 %% plot test
 
 t = 0.6;
-nxlist = [40, 160];
+nxlist = [80, 160];
  
 for w = 1:2
     figure;
