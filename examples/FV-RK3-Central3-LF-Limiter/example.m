@@ -10,7 +10,7 @@ beta = 1;
 xleft = -pi;
 xright = pi;
 
-limiters = {{false, 'nolimiter'}, {tvd(), 'tvd'}, {tvb(0.5), 'tvb 0.5'}, {tvb(1), 'tvb 1.0'}};
+limiters = {{false, 'no limiter'}, {tvd(), 'tvd'}, {tvb(0.5), 'tvb 0.5'}, {tvb(1), 'tvb 1.0'}};
 
 for cnt = 1:numel(limiters)
     lmt = limiters{cnt}{1};
@@ -54,7 +54,7 @@ for cnt = 1:numel(limiters)
 
     figure;
     hold on
-    plot(x_ref, u_exact_ref)
+    plot(x_ref, u_exact_ref, DisplayName = 'u-ref')
 
     for w = 1:2
         [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
@@ -63,10 +63,12 @@ for cnt = 1:numel(limiters)
         uh0 = Quad().integrate(init_func, x - dx / 2, x + dx / 2) / dx;
         uh = rk3_central3_scheme(uh0, dx, t2, @burgers_fhat_LF, @burgers_df, lmt);
 
-        plot(x, uh)
+        plot(x, uh, DisplayName = sprintf('uh (n=%d)', nxlist2(w)))
     end
 
     hold off
+    title(lmt_name);
+    legend('Location', 'best');
 end
 
 function result = burgers_df(u)

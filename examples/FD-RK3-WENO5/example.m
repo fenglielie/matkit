@@ -41,9 +41,9 @@ nx_ref = 320;
 
 u_exact_ref = burgers_sin_exact(x_ref, t2, alpha, beta);
 
-figure(w);
+figure;
 hold on
-plot(x_ref, u_exact_ref)
+plot(x_ref, u_exact_ref, DisplayName = 'u-ref')
 
 for w = 1:2
     [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
@@ -51,10 +51,11 @@ for w = 1:2
     uh0 = alpha + beta * sin(x);
     uh = fd_rk3_weno5_scheme(uh0, dx, t2, @burgers_fl, @burgers_fr, @burgers_df);
 
-    plot(x, uh)
+    plot(x, uh, DisplayName = sprintf('uh (n=%d)', nxlist2(w)))
 end
 
 hold off
+legend('Location', 'best');
 
 function result = burgers_fl(u, c)
     result = u .^ 2/4 + c / 2 .* u;

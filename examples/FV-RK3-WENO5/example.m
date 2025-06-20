@@ -44,9 +44,9 @@ nx_ref = 320;
 exact_func = @(s) burgers_sin_exact(s, t2, alpha, beta);
 u_exact_ref = Quad().integrate(exact_func, x_ref - dx_ref / 2, x_ref + dx_ref / 2) / dx_ref;
 
-figure(w);
+figure;
 hold on
-plot(x_ref, u_exact_ref)
+plot(x_ref, u_exact_ref, DisplayName = 'u-ref')
 
 for w = 1:2
     [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
@@ -55,10 +55,11 @@ for w = 1:2
     uh0 = Quad().integrate(init_func, x - dx / 2, x + dx / 2) / dx;
     uh = rk3_weno5_scheme(uh0, dx, t2, @burgers_fhat_LF, @burgers_df);
 
-    plot(x, uh)
+    plot(x, uh, DisplayName = sprintf('uh (n=%d)', nxlist2(w)))
 end
 
 hold off
+legend('Location', 'best');
 
 function result = burgers_df(u)
     result = u;

@@ -54,9 +54,11 @@ nx_ref = 320;
 
 exact_ref_func = @(s) eulereqs_sin_exact(s, t2, alpha, beta, omega, phi, u0_ic, p0_ic);
 % u_exact_ref = dg_projection_eqs(exact_ref_func, x_ref, dx_ref, pk, gk, basis, dim);
+[rho_values_ref, ~, ~] = exact_ref_func(x_ref);
 
 figure;
 hold on
+plot(x_ref, rho_values_ref, DisplayName = 'rho-ref')
 
 for w = 1:2
     [x, dx] = mesh_init_1d(xleft, xright, nxlist2(w));
@@ -67,13 +69,11 @@ for w = 1:2
 
     v = basis.eval(0, pk + 1); % column vector
 
-    [rho_values_ref, ~, ~] = exact_ref_func(x_ref);
-
-    plot(x_ref, rho_values_ref)
-    plot(x, v' * uh(1:(pk + 1), :))
+    plot(x, v' * uh(1:(pk + 1), :), DisplayName = sprintf('rhoh (n=%d)', nxlist2(w)))
 end
 
 hold off
+legend('Location', 'best');
 
 function [v1, v2, v3] = eulereqs_sin_exact(x, t, alpha, beta, omega, phi, u0, p0)
     % v = [v1, v2, v3] = [rho, rho u, E]

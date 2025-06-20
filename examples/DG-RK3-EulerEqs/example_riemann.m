@@ -28,10 +28,8 @@ basis_dx = MatLegendreDx(pk + 1);
 
 t = 0.6;
 nxlist = [80, 160];
- 
-for w = 1:2
-    figure;
 
+for w = 1:2
     [x, dx] = mesh_init_1d(xleft, xright, nxlist(w));
 
     uh0 = dg_projection_eqs(init_func, x, dx, pk, gk, basis, dim);
@@ -53,6 +51,8 @@ for w = 1:2
     primitive_ref = {rho_values_ref, u_values_ref, p_values_ref, e_values_ref};
     names = {'Density', 'Velocity', 'Pressure', 'Internal Energy'};
 
+    figure;
+
     for s = 1:4
         subplot(2, 2, s);
         hold on
@@ -61,9 +61,7 @@ for w = 1:2
         plot(x, q_ref, 'b', 'DisplayName', 'u-ref');
 
         q = primitive{s};
-        plot(x, q, 'DisplayName', 'u');
-
-        title(names{s});
+        plot(x, q, 'DisplayName', DisplayName = sprintf('uh (n=%d)', nxlist(w)));
 
         qmax = max(q);
         qmin = min(q);
@@ -71,6 +69,7 @@ for w = 1:2
         ylim([qmin - 0.1 * qdiff, qmax + 0.1 * qdiff]);
 
         hold off
+        title(names{s});
         legend('Location', 'best');
     end
 
