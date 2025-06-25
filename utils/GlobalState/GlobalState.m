@@ -16,13 +16,13 @@ classdef GlobalState < handle
     %   data            - A public structure used to store arbitrary data.
     %
     % EXAMPLE USAGE:
-    %   state = GlobalState.getInstance();
+    %   state = GlobalState.get_instance();
     %   state.data.message = 'hello';
     %   updateMessage();
     %   disp(state.data.message); % 'updated'
     %
     %   function updateMessage()
-    %       s = GlobalState.getInstance();
+    %       s = GlobalState.get_instance();
     %       s.data.message = 'updated';
     %   end
 
@@ -40,7 +40,7 @@ classdef GlobalState < handle
 
     methods (Static)
 
-        function obj = getInstance()
+        function obj = get_instance()
             % GETINSTANCE Returns the unique shared instance of GlobalState.
 
             persistent uniqueInstance
@@ -63,7 +63,7 @@ classdef GlobalState < handle
             %   GlobalState.set_root();
             %   GlobalState.set_root(pathInput);
 
-            state = GlobalState.getInstance();
+            state = GlobalState.get_instance();
 
             if nargin >= 1 && ischar(pathInput) && ~isempty(pathInput)
 
@@ -100,7 +100,7 @@ classdef GlobalState < handle
             %
             % If root_dir has not been set yet, returns empty.
 
-            state = GlobalState.getInstance();
+            state = GlobalState.get_instance();
 
             if isfield(state.data, 'root_dir')
                 root_dir = state.data.root_dir;
@@ -119,7 +119,7 @@ classdef GlobalState < handle
             %
             % This method always overwrites the existing saved path.
 
-            state = GlobalState.getInstance();
+            state = GlobalState.get_instance();
             state.data.saved_path = path();
         end
 
@@ -128,7 +128,7 @@ classdef GlobalState < handle
             %
             % If a saved path already exists, this function does nothing.
 
-            state = GlobalState.getInstance();
+            state = GlobalState.get_instance();
 
             if ~isfield(state.data, 'saved_path') || isempty(state.data.saved_path)
                 state.data.saved_path = path();
@@ -141,7 +141,7 @@ classdef GlobalState < handle
             %
             % If no path was saved, returns [].
 
-            state = GlobalState.getInstance();
+            state = GlobalState.get_instance();
 
             if isfield(state.data, 'saved_path')
                 saved_path = state.data.saved_path;
@@ -154,7 +154,7 @@ classdef GlobalState < handle
         function clean_saved_path()
             % CLEAN_SAVED_PATH Removes the saved path record from GlobalState.
 
-            state = GlobalState.getInstance();
+            state = GlobalState.get_instance();
 
             if isfield(state.data, 'saved_path')
                 state.data = rmfield(state.data, 'saved_path');
@@ -165,7 +165,7 @@ classdef GlobalState < handle
         function restore_saved_path()
             % RESTORE_SAVED_PATH Restores MATLAB path from the saved path record in GlobalState.
 
-            state = GlobalState.getInstance();
+            state = GlobalState.get_instance();
 
             if isfield(state.data, 'saved_path')
                 path(state.data.saved_path);
