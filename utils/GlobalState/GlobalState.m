@@ -56,12 +56,12 @@ classdef GlobalState < handle
 
     methods (Static)
 
-        function setRootHere(pathInput)
-            % SETROOTHERE Sets root_dir based on input path or caller's file location.
+        function set_root(pathInput)
+            % SET_ROOT Sets root_dir based on input path or caller's file location.
             %
             % Usage:
-            %   GlobalState.setRootHere();
-            %   GlobalState.setRootHere(pathInput);
+            %   GlobalState.set_root();
+            %   GlobalState.set_root(pathInput);
 
             state = GlobalState.getInstance();
 
@@ -76,7 +76,7 @@ classdef GlobalState < handle
                     end
 
                 else
-                    error('setRootHere:InvalidPath', 'Invalid path: %s', pathInput);
+                    error('set_root:InvalidPath', 'Invalid path: %s', pathInput);
                 end
 
             else
@@ -95,8 +95,8 @@ classdef GlobalState < handle
             state.data.root_dir = root_dir;
         end
 
-        function root_dir = getRoot()
-            % GETROOT Returns the stored root_dir from GlobalState singleton.
+        function root_dir = get_root()
+            % GET_ROOT Returns the stored root_dir from GlobalState singleton.
             %
             % If root_dir has not been set yet, returns empty.
 
@@ -106,6 +106,71 @@ classdef GlobalState < handle
                 root_dir = state.data.root_dir;
             else
                 root_dir = [];
+            end
+
+        end
+
+    end
+
+    methods (Static)
+
+        function save_path_force()
+            % SAVE_PATH_FORCE Forcefully saves the current MATLAB path into GlobalState.
+            %
+            % This method always overwrites the existing saved path.
+
+            state = GlobalState.getInstance();
+            state.data.saved_path = path();
+        end
+
+        function save_path_once()
+            % SAVE_PATH_ONCE Saves the current MATLAB path into GlobalState only once.
+            %
+            % If a saved path already exists, this function does nothing.
+
+            state = GlobalState.getInstance();
+
+            if ~isfield(state.data, 'saved_path') || isempty(state.data.saved_path)
+                state.data.saved_path = path();
+            end
+
+        end
+
+        function saved_path = get_saved_path()
+            % GET_SAVED_PATH Returns the saved path string from GlobalState.
+            %
+            % If no path was saved, returns [].
+
+            state = GlobalState.getInstance();
+
+            if isfield(state.data, 'saved_path')
+                saved_path = state.data.saved_path;
+            else
+                saved_path = [];
+            end
+
+        end
+
+        function clean_saved_path()
+            % CLEAN_SAVED_PATH Removes the saved path record from GlobalState.
+
+            state = GlobalState.getInstance();
+
+            if isfield(state.data, 'saved_path')
+                state.data = rmfield(state.data, 'saved_path');
+            end
+
+        end
+
+        function restore_saved_path()
+            % RESTORE_SAVED_PATH Restores MATLAB path from the saved path record in GlobalState.
+
+            state = GlobalState.getInstance();
+
+            if isfield(state.data, 'saved_path')
+                path(state.data.saved_path);
+            else
+                warning('No saved path found to restore.');
             end
 
         end

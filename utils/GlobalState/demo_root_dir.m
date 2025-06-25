@@ -1,6 +1,6 @@
 cd(fileparts(mfilename('fullpath')));
 run('../../setup.m')
 
-GlobalState.setRootHere();
+GlobalState.set_root();
 
-disp(GlobalState.getRoot())
+disp(GlobalState.get_root())
