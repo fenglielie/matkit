@@ -1,2 +1,2 @@
-run('./base/setup.m')
-run('./utils/setup.m')
+addpath(genpath('./base'))
+addpath(genpath('./utils'))

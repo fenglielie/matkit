@@ -7,7 +7,6 @@ import sys
 
 
 def check_empty_lines(file_path):
-    """检查是否存在连续三个或更多空行"""
     msgs = []
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -36,7 +35,6 @@ def check_empty_lines(file_path):
 
 
 def check_code_double_quotes(file_path):
-    """检查代码部分是否出现双引号"""
     msgs = []
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -52,7 +50,6 @@ def check_code_double_quotes(file_path):
 
 
 def check_comment_ascii(file_path):
-    """检查注释部分是否含非ASCII字符或双引号"""
     msgs = []
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -76,7 +73,6 @@ def check_comment_ascii(file_path):
 
 
 def check_file(file_path):
-    """执行检查"""
     msgs = []
     msgs += check_empty_lines(file_path)
     msgs += check_code_double_quotes(file_path)
@@ -85,7 +81,6 @@ def check_file(file_path):
 
 
 def collect_m_files(root_dir):
-    """收集所有 .m 文件"""
     SKIP_DIRS = [".git", "node_modules", ".deploy_git"]
     tasks = []
     for subdir, dirs, files in os.walk(root_dir, topdown=True):
