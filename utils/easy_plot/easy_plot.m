@@ -135,6 +135,7 @@ function handles = easy_plot(x, y, varargin)
 
     hold off;
     grid on;
+    box on;
 
     % Set title and axis labels if provided
     if ~isempty(TitleStr), title(TitleStr); end
