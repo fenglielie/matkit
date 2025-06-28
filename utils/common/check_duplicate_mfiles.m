@@ -8,13 +8,25 @@ function check_duplicate_mfiles()
     allPaths = strsplit(path, pathsep);
     projPaths = allPaths(~contains(allPaths, 'MATLAB'));
 
+    stk = dbstack('-completenames');
+
+    if numel(stk) == 1 % invoke from command line, add current directory
+
+        if ~any(strcmp(pwd, projPaths))
+            projPaths{end + 1} = pwd;
+        end
+
+    end
+
     fileNames = {};
+    filePaths = {};
 
     for k = 1:numel(projPaths)
         files = dir(fullfile(projPaths{k}, '*.m'));
 
         for f = 1:numel(files)
             fileNames{end + 1} = files(f).name; %#ok<AGROW>
+            filePaths{end + 1} = fullfile(projPaths{k}, files(f).name); %#ok<AGROW>
         end
 
     end
@@ -31,8 +43,18 @@ function check_duplicate_mfiles()
     if ~isempty(duplicateIdx)
         msg = sprintf('Duplicate .m files found:\n');
 
-        for i = duplicateIdx
-            msg = [msg, sprintf('  %s : %d\n', uniqueNames{i}, counts(i))]; %#ok<AGROW>
+        for i = 1:numel(duplicateIdx)
+            name = uniqueNames{duplicateIdx(i)};
+            msg = [msg, sprintf('  %s:\n', name)]; %#ok<AGROW>
+
+            for j = 1:numel(fileNames)
+
+                if strcmp(fileNames{j}, name)
+                    msg = [msg, sprintf('    %s\n', filePaths{j})]; %#ok<AGROW>
+                end
+
+            end
+
         end
 
         warning(msg);
